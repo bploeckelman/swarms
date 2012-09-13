@@ -1,3 +1,22 @@
+// ----- LoadResources ----------------------------------------------------
+var images = {
+       "kalachakra" : new Image()
+     , "bubble"     : new Image()
+     , "heart"      : new Image()
+     , "textbox"    : new Image()
+     , "gold"       : new Image()
+     , "shop"       : new Image()
+     , "trees_large": new Image()
+};
+images["kalachakra" ].src = "kalachakra.png";
+images["bubble"     ].src = "bubble.png";
+images["heart"      ].src = "heart.png";
+images["textbox"    ].src = "textbox.png";
+images["gold"       ].src = "gold.png";
+images["shop"       ].src = "shop.png";
+images["trees_large"].src = "trees-large.png";
+
+
 // ----------------------------------------------------------------------
 //  Entry Point
 // ----------------------------------------------------------------------
@@ -17,23 +36,9 @@ function main() {
     var canvasBorder  = "rgb(175,175,125) 5px solid";
     var canvasBGColor = "rgb(16,32,16)";
 
-    // ----- LoadResources ----------------------------------------------------
-    var images = { 
-           "kalachakra" : new Image()
-         , "bubble"     : new Image()
-         , "heart"      : new Image()
-         , "textbox"    : new Image() 
-         , "gold"       : new Image()
-         , "shop"       : new Image()
-         , "trees_large": new Image()
-    };
-    images["kalachakra" ].src = "kalachakra.png";
-    images["bubble"     ].src = "bubble.png";
-    images["heart"      ].src = "heart.png";
-    images["textbox"    ].src = "textbox.png";
-    images["gold"       ].src = "gold.png";
-    images["shop"       ].src = "shop.png";
-    images["trees_large"].src = "trees-large.png";
+
+    var level = new Level(5, { x: 0, y: 0, w: canvasWidth, h: canvasHeight });
+
 
     // ----- SetupEnvironment -------------------------------------------------
     document.getElementsByTagName("body")[0].style.background = "rgb(16,16,16)";
@@ -76,6 +81,8 @@ function main() {
         context.globalAlpha = 0.3;
         context.drawImage(images["kalachakra"], 0, 0, canvas.width, canvas.height);
         context.restore();
+
+        level.draw(context);
 
         reqFrame(drawLoop);
     }
