@@ -31,13 +31,15 @@ function main() {
                         window.setTimeout(callback, 1000 / 60); 
                    };
 
-    var canvasWidth   = window.innerWidth - 128;;
-    var canvasHeight  = window.innerHeight - 64;;
+    var canvasWidth   = window.innerWidth - 128;
+    var canvasHeight  = window.innerHeight - 64;
     var canvasBorder  = "rgb(175,175,125) 5px solid";
     var canvasBGColor = "rgb(16,32,16)";
 
 
-    var level = new Level(5, { x: 0, y: 0, w: canvasWidth, h: canvasHeight });
+    var numTrees = 100; // for testing
+    var treeBoundary = { x: 0, y: 0, w: canvasWidth, h: canvasHeight };
+    var level = new Level(numTrees, treeBoundary);
 
 
     // ----- SetupEnvironment -------------------------------------------------
