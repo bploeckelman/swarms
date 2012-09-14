@@ -11,7 +11,10 @@ var images = {
         "textbox"    : new Image(),
         "gold"       : new Image(),
         "shop"       : new Image(),
-        "trees_large": new Image()
+        "trees_large": new Image(),
+        "boid_red"   : new Image(),
+        "boid_yellow": new Image(),
+        "boid_orange": new Image()
     };
 images.grass.src       = "grass.png";
 images.bubble.src      = "bubble.png";
@@ -20,12 +23,15 @@ images.textbox.src     = "textbox.png";
 images.gold.src        = "gold.png";
 images.shop.src        = "shop.png";
 images.trees_large.src = "trees-large.png";
+images.boid_red.src    = "boid-red.png";
+images.boid_yellow.src = "boid-yellow.png";
+images.boid_orange.src = "boid-orange.png";
 
 
 // ----------------------------------------------------------------------
 //  Entry Point
 // ----------------------------------------------------------------------
-function main() {
+(function main() {
     "use strict";
     // ------------------------------------------------------------------
     // Note: var declarations get hoisted up here anyways, 
@@ -102,6 +108,7 @@ function main() {
         context.drawImage(images.grass, 0, 0, canvas.width, canvas.height);
         context.restore();
 
+        level.update();
         level.draw(context);
 
         reqFrame(drawLoop);
@@ -120,4 +127,4 @@ function main() {
 
     drawLoop();
 
-}
+})();
