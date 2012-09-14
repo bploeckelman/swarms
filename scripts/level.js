@@ -1,4 +1,3 @@
-<<<<<<< HEAD:level.js
 /*global context*/
 /*global images*/
 /*global treeImages*/
