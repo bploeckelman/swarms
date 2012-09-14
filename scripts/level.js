@@ -6,10 +6,10 @@
 //    Level object
 // ----------------------------------------------------------------------------
 var Level = function (numTrees, region) {
-
-    this.trees = growTrees(numTrees, region);
-    this.shop  = { pos : { x: 0, y: 0 } };
-    this.farmer= new Farmer({ x: 0, y: 0 });
+    this.trees  = growTrees(numTrees, region);
+    this.shop   = { pos : { x: 0, y: 0 } };
+    this.farmer = new Farmer({ x: 0, y: 0 });
+    this.flocks = new Array();
 };
 
 // ----- Level prototype methods ----------------------------------------------
@@ -19,18 +19,51 @@ Level.prototype.draw = function (context) {
     }    
     context.drawImage(images.shop, this.shop.pos.x, this.shop.pos.y);
     this.farmer.draw(context);
+    
+    for (var i = 0; i < this.flocks.length; ++i) {
+        this.flocks[i].draw(context);
+    }
 };
 
-Level.prototype.update = function () {
+Level.prototype.update = function (canvas) {
+    // Update trees/fruit
     for (var i = this.trees.length - 1; i >= 0; --i) {
+        this.trees[i].update();
+        
         for (var j = this.trees[i].fruits.length - 1; j >= 0; --j){
+            // Add a new swarm if appropriate
+            if (this.trees[i].fruits[j].rotten) {
+                var parentTree = this.trees[i].fruits[j].parentTree,
+                    parentTreeIsSwarmed = false;
+                for (var f = 0; f < this.flocks.length; ++f) {
+                    if (this.flocks[f].target === parentTree) {
+                        parentTreeIsSwarmed = true;
+                        break;
+                    }
+                }
+                if (!parentTreeIsSwarmed) {
+                    var flock = new Flock(parentTree, 
+                                          Object.create(parentTree.pos), 
+                                          10);
+                    flock.init();
+                    this.flocks.push(flock);
+                }
+            }
+            
+            // Check each dropped fruit for collision with the player        
             if (collides(this.farmer, this.trees[i].fruits[j]) &&
                 this.trees[i].fruits[j].dropped) {
                 this.trees[i].fruits[j].remove();
             }
         }
-        this.trees[i].update();
     }
+    
+    // Update flocks
+    for (var i = 0; i < this.flocks.length; ++i) {
+        this.flocks[i].update(canvas);
+    }
+    
+    // Update the player
     this.farmer.update();
 };
 

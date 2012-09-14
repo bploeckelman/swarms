@@ -36,6 +36,7 @@ window.addEventListener('keydown', function(e) {
 window.addEventListener('keyup', function(e) {
     keyState[e.keycode || e.which] = false;
 }, true);
+
 // ----------------------------------------------------------------------
 //  Entry Point
 // ----------------------------------------------------------------------
@@ -116,7 +117,7 @@ window.addEventListener('keyup', function(e) {
         context.drawImage(images.grass, 0, 0, canvas.width, canvas.height);
         context.restore();
 
-        level.update();
+        level.update(canvas);
         level.draw(context);
 
         reqFrame(drawLoop);
