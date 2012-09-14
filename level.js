@@ -76,9 +76,9 @@ function collides (ent0, ent1) {
     //HACK: This seems like a really hacky way to access pixel data, but seems
     //to be the best one I could figure out
     var context = document.getElementById('canvas').getContext('2d');
-    context.drawImage(ent0.image, -1000, -1000);
+    context.drawImage(ent0.image, ent0.pos.x, ent0.pos.y);
     var pixels0 = context.getImageData(0, 0, w0, h0);
-    context.drawImage(ent1.image, -1000, -1000);
+    context.drawImage(ent1.image, ent1.pos.x, ent1.pos.y);
     var pixels1 = context.getImageData(0, 0, w1, h1);
 
     for( var pixX = xMin; pixX < xMax; pixX++) {
