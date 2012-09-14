@@ -5,7 +5,7 @@
 
 // ----- LoadResources ----------------------------------------------------
 var images = {
-        "kalachakra" : new Image(),
+        "grass"      : new Image(),
         "bubble"     : new Image(),
         "heart"      : new Image(),
         "textbox"    : new Image(),
@@ -13,7 +13,7 @@ var images = {
         "shop"       : new Image(),
         "trees_large": new Image()
     };
-images.kalachakra.src  = "kalachakra.png";
+images.grass.src       = "grass.png";
 images.bubble.src      = "bubble.png";
 images.heart.src       = "heart.png";
 images.textbox.src     = "textbox.png";
@@ -46,7 +46,7 @@ function main() {
             || window.mozRequestAnimationFrame
             || window.oRequestAnimationFrame
             || window.msRequestAnimationFrame
-            || function (callback) {//, element) {
+            || function (callback) {
             window.setTimeout(callback, 1000 / 60);
         };
 
@@ -55,8 +55,8 @@ function main() {
     canvasBorder  = "rgb(175,175,125) 5px solid";
     canvasBGColor = "rgb(16,32,16)";
 
-    numTrees = 100; // for testing
-    treeBoundary = { x: 0, y: 0, w: canvasWidth, h: canvasHeight };
+    numTrees = 10;
+    treeBoundary = { x: 100, y: 100, w: canvasWidth - 100, h: canvasHeight - 100 };
     level = new Level(numTrees, treeBoundary);
 
     // ----- SetupResize ------------------------------------------------------
@@ -98,8 +98,8 @@ function main() {
 
         // Draw background image
         context.save();
-        context.globalAlpha = 0.3;
-        context.drawImage(images.kalachakra, 0, 0, canvas.width, canvas.height);
+        context.globalAlpha = 0.4;
+        context.drawImage(images.grass, 0, 0, canvas.width, canvas.height);
         context.restore();
 
         level.draw(context);

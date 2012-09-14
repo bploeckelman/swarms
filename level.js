@@ -1,30 +1,21 @@
+/*global context*/
+/*global images*/
+/*global treeImages*/
+/*global treeTypes*/
 // ----------------------------------------------------------------------------
 //    Level object
 // ----------------------------------------------------------------------------
-var Level = function(numTrees, region) {
+var Level = function (numTrees, region) {
 
     this.trees = growTrees(numTrees, region);
-    // TODO: add dropoff point
+    this.shop  = { pos : { x: 0, y: 0 } };
 
 };
-
-
-// TODO: probably move to entities.js?
-// Note: image regions from trees-large.png
-var treeImages = {
-      "small"  : { x: 168, y: 24, w: 62, h: 72 }
-    , "medium" : { x:   0, y: 13, w: 70, h: 83 }
-    , "large"  : { x:  83, y:  0, w: 71, h: 96 }
-    , "pine"   : { x: 244, y: 27, w: 39, h: 69 }
-};
-var treeTypes = Object.keys(treeImages);
-
 
 // ----- Level prototype methods ----------------------------------------------
-Level.prototype.draw = function(context) {
+Level.prototype.draw = function (context) {
 
-    for(var i = 0; i < this.trees.length; ++i)
-    {
+    for (var i = 0; i < this.trees.length; ++i) {
         context.drawImage(
                   images.trees_large                // source image
                 , treeImages[this.trees[i].type].x  // source x
@@ -37,21 +28,23 @@ Level.prototype.draw = function(context) {
                 , treeImages[this.trees[i].type].h  // dest h
         );
     }
+    
+    context.drawImage(images.shop, this.shop.pos.x, this.shop.pos.y);
 };
 
 
 // ----- Helper functions -----------------------------------------------------
 // TODO: make sure these are sufficiently spread out
 //       and sufficiently far away from the dropoff point
-function growTrees(num_trees, region) {
-    var trees = [];
-    for(var i = 0; i < num_trees; ++i) {
-        trees.push(
-            new Tree( treeTypes[Math.floor(Math.random() * treeTypes.length)]
-                    , { x: Math.random() * (region.w - 70) + region.x
-                      , y: Math.random() * (region.h - 96) + region.y } )
-        );
+function growTrees (numTrees, region) {
+    var trees = [], pos, type;
+    for (var i = 0; i < numTrees; ++i) {
+        pos = {
+            x: Math.random() * (region.w - 70) + region.x,
+            y: Math.random() * (region.h - 96) + region.y
+        };
+        type = treeTypes[ Math.floor(Math.random() * treeTypes.length) ];
+        trees.push(new Tree(type, pos));
     }
     return trees;
 };
-
