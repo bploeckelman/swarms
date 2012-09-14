@@ -17,17 +17,17 @@ var images = {
         "boid_orange": new Image(),
         "farmer"     : new Image()
     };
-images.grass.src       = "grass.png";
-images.bubble.src      = "bubble.png";
-images.heart.src       = "heart.png";
-images.textbox.src     = "textbox.png";
-images.gold.src        = "gold.png";
-images.shop.src        = "shop.png";
-images.trees_large.src = "trees-large.png";
-images.boid_red.src    = "boid-red.png";
-images.boid_yellow.src = "boid-yellow.png";
-images.boid_orange.src = "boid-orange.png";
-images.farmer.src      = "farmer.png"; 
+images.grass.src       = "images/grass.png";
+images.bubble.src      = "images/bubble.png";
+images.heart.src       = "images/heart.png";
+images.textbox.src     = "images/textbox.png";
+images.gold.src        = "images/gold.png";
+images.shop.src        = "images/shop.png";
+images.trees_large.src = "images/trees-large.png";
+images.boid_red.src    = "images/boid-red.png";
+images.boid_yellow.src = "images/boid-yellow.png";
+images.boid_orange.src = "images/boid-orange.png";
+images.farmer.src      = "images/farmer.png";
 
 var keyState = {};
 window.addEventListener('keydown', function(e) {
