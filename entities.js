@@ -1,9 +1,10 @@
 // ----------------------------------------------------------------------------
 //     Entity
 // ----------------------------------------------------------------------------
-var Entity = function (name, pos) {
+var Entity = function (name, pos, image) {
     this.name = name;
     this.pos  = pos;
+    this.image= image;
 }
 
 Entity.prototype.distance = function (other) {
@@ -28,7 +29,7 @@ var treeTypes = Object.keys(treeImages);
 
 
 var Tree = function (type, pos) {
-    Entity.call(this, "tree", pos);
+    Entity.call(this, "tree", pos, images.trees_large);
     this.type = type;
     this.timer = 0;
     this.fruitTime = Math.random() * 500 + 100;
@@ -48,7 +49,7 @@ Tree.prototype.update = function () {
 
 Tree.prototype.draw = function (context) {
     context.drawImage(
-              images.trees_large       // source image
+              this.image       // source image
             , treeImages[this.type].x  // source x
             , treeImages[this.type].y  // source y
             , treeImages[this.type].w  // source w
@@ -87,7 +88,7 @@ Tree.prototype.toString = function () {
 //     Fruit
 // ----------------------------------------------------------------------------
 var Fruit = function (type, tree) {
-    Entity.call(this, "fruit", Object.create(tree.pos));
+    Entity.call(this, "fruit", Object.create(tree.pos), images.boid_red);
     this.type = type;
     this.parentTree = tree;
     this.lifetime = Math.random() * 200 + 100;
@@ -96,36 +97,69 @@ var Fruit = function (type, tree) {
     this.rotten = false;
 };
 
+Fruit.prototype.remove = function () {
+     var thisIndex = this.parentTree.fruits.indexOf(this);
+     this.parentTree.fruits.splice(thisIndex, 1);
+}
+
 Fruit.prototype.update = function () {
     this.age += 1;
     
     if (this.rotten) {
         if (this.age > 5*this.lifetime) {
-            var thisIndex = this.parentTree.fruits.indexOf(this);
-            this.parentTree.fruits.splice(thisIndex, 1);
+            this.remove();
         }
     } else if (this.dropped) {
         if (this.age > 2*this.lifetime) {
             this.rotten = true;
+            this.image = images.boid_orange;
         }
     } else if (this.age > this.lifetime) {
         this.dropped = true;
         this.pos.y += 60;
+        this.image = images.boid_yellow;
     }
 }
 
+
 Fruit.prototype.draw = function (context) {
-    var image;
-    if (!this.dropped && !this.rotten) {
-        image = images.boid_red;
-    } else if (!this.rotten) {
-        image = images.boid_yellow;
-    } else {
-        image = images.boid_orange;
-    }
-    context.drawImage(image, this.pos.x, this.pos.y);
+   context.drawImage(this.image, this.pos.x, this.pos.y);
 }
 
 Fruit.prototype.toString = function () {
     return Entity.prototype.toString.call(this)+' type: '+this.type;
+}
+
+
+// ----------------------------------------------------------------------------
+//     Farmer
+// ----------------------------------------------------------------------------
+var Farmer = function (pos) {
+    Entity.call(this, "farmer", pos, images.farmer);
+    this.health = 100;
+    this.spray  = 100;
+    this.speed  =  3;
+};
+
+Farmer.prototype.update = function (dir) {
+    if (keyState[68]) {
+        this.pos.x += this.speed;
+    }
+    if (keyState[65]) {
+        this.pos.x -= this.speed;
+    }
+    if (keyState[87]) {
+        this.pos.y -= this.speed;
+    }
+    if (keyState[83]) {
+        this.pos.y += this.speed;
+    }
+}
+
+Farmer.prototype.draw = function (context) {
+    context.drawImage(this.image, this.pos.x, this.pos.y);
+}
+
+Farmer.prototype.toString = function () {
+    return Entity.prototype.toString.call(this);
 }

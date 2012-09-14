@@ -14,7 +14,8 @@ var images = {
         "trees_large": new Image(),
         "boid_red"   : new Image(),
         "boid_yellow": new Image(),
-        "boid_orange": new Image()
+        "boid_orange": new Image(),
+        "farmer"     : new Image()
     };
 images.grass.src       = "grass.png";
 images.bubble.src      = "bubble.png";
@@ -26,8 +27,15 @@ images.trees_large.src = "trees-large.png";
 images.boid_red.src    = "boid-red.png";
 images.boid_yellow.src = "boid-yellow.png";
 images.boid_orange.src = "boid-orange.png";
+images.farmer.src      = "farmer.png"; 
 
-
+var keyState = {};
+window.addEventListener('keydown', function(e) {
+    keyState[e.keycode || e.which] = true;
+}, true);
+window.addEventListener('keyup', function(e) {
+    keyState[e.keycode || e.which] = false;
+}, true);
 // ----------------------------------------------------------------------
 //  Entry Point
 // ----------------------------------------------------------------------
@@ -119,7 +127,6 @@ images.boid_orange.src = "boid-orange.png";
         console.log(evt);
     }
     canvas.addEventListener("click", handleClick, false);
-
 
     // ------------------------------------------------------------------
     // ------------------------------------------------------------------
