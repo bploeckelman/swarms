@@ -1,3 +1,4 @@
+<<<<<<< HEAD:level.js
 /*global context*/
 /*global images*/
 /*global treeImages*/
@@ -24,8 +25,8 @@ Level.prototype.draw = function (context) {
 Level.prototype.update = function () {
     for (var i = this.trees.length - 1; i >= 0; --i) {
         for (var j = this.trees[i].fruits.length - 1; j >= 0; --j){
-            if ( collides(this.farmer, this.trees[i].fruits[j]) &&
-                 this.trees[i].fruits[j].dropped) {
+            if (collides(this.farmer, this.trees[i].fruits[j]) &&
+                this.trees[i].fruits[j].dropped) {
                 this.trees[i].fruits[j].remove();
             }
         }
