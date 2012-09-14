@@ -14,22 +14,16 @@ var Level = function (numTrees, region) {
 
 // ----- Level prototype methods ----------------------------------------------
 Level.prototype.draw = function (context) {
-
     for (var i = 0; i < this.trees.length; ++i) {
-        context.drawImage(
-                  images.trees_large                // source image
-                , treeImages[this.trees[i].type].x  // source x
-                , treeImages[this.trees[i].type].y  // source y
-                , treeImages[this.trees[i].type].w  // source w
-                , treeImages[this.trees[i].type].h  // source h
-                , this.trees[i].pos.x               // dest x
-                , this.trees[i].pos.y               // dest y
-                , treeImages[this.trees[i].type].w  // dest w
-                , treeImages[this.trees[i].type].h  // dest h
-        );
-    }
-    
+        this.trees[i].draw(context);
+    }    
     context.drawImage(images.shop, this.shop.pos.x, this.shop.pos.y);
+};
+
+Level.prototype.update = function () {
+    for (var i = 0; i < this.trees.length; ++i) {
+        this.trees[i].update();
+    }
 };
 
 
