@@ -19,12 +19,19 @@ var Boid = function (type, initialPos, initialVel, maxSpeed) {
 
 Boid.prototype.draw = function (context) {
     context.drawImage(this.image, this.pos.x, this.pos.y);
+
+    context.strokeStyle = "rgb(0,0,0)";
+    context.beginPath();
+    context.moveTo(this.pos.x + 8, this.pos.y + 8);
+    context.lineTo(this.pos.x + 8 + 8 * this.vel.x, this.pos.y + 8 + 8 * this.vel.y);
+    context.closePath();
+    context.stroke();
 }
 
 Boid.prototype.move = function (canvas) {
     this.pos.x += this.vel.x;
     this.pos.y += this.vel.y;
-    
+    /*
     if (this.pos.x > canvas.width) {
         if (this.vel.x > 0) {
             this.vel.x *= -1;
@@ -46,6 +53,7 @@ Boid.prototype.move = function (canvas) {
             this.vel.y *= -1;
         }
     }
+    */
 }
 
 Boid.prototype.norm = function () {
