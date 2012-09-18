@@ -72,7 +72,7 @@ Tree.prototype.fruit = function () {
         }
     }
     if (numNonRotten < 3) {
-        fruit = new Fruit("fruit-type", this);
+        fruit = new Fruit("apple", this);
         fruit.pos.x += Math.random() * 30;
         fruit.pos.y += Math.random() * 45;
         this.fruits.push(fruit);        
@@ -87,8 +87,18 @@ Tree.prototype.toString = function () {
 // ----------------------------------------------------------------------------
 //     Fruit
 // ----------------------------------------------------------------------------
+var fruitImages = {
+      "cherry"     : { x:   0, y: 0, w: 22, h: 22 }
+    , "strawberry" : { x:  24, y: 0, w: 20, h: 22 }
+    , "orange"     : { x:  48, y: 0, w: 20, h: 22 }
+    , "lemon"      : { x:  72, y: 0, w: 20, h: 22 }
+    , "apple"      : { x:  96, y: 0, w: 20, h: 22 }
+    , "grapes"     : { x: 120, y: 0, w: 18, h: 22 }
+};
+var fruitTypes = Object.keys(fruitImages);
+
 var Fruit = function (type, tree) {
-    Entity.call(this, "fruit", Object.create(tree.pos), images.boid_red);
+    Entity.call(this, "fruit", Object.create(tree.pos), images.fruits);
     this.type = type;
     this.parentTree = tree;
     this.lifetime = Math.random() * 200 + 100;
@@ -113,18 +123,28 @@ Fruit.prototype.update = function () {
         if (this.age > 2*this.lifetime) {
             this.rotten = true;
             this.dropped = false;
-            this.image = images.boid_orange;
+            this.type = "grapes";
         }
     } else if (this.age > this.lifetime) {
         this.dropped = true;
         this.pos.y += 60;
-        this.image = images.boid_yellow;
+        this.type = "orange";
     }
 }
 
 
 Fruit.prototype.draw = function (context) {
-   context.drawImage(this.image, this.pos.x, this.pos.y);
+    context.drawImage(
+          this.image       // source image
+        , fruitImages[this.type].x  // source x
+        , fruitImages[this.type].y  // source y
+        , fruitImages[this.type].w  // source w
+        , fruitImages[this.type].h  // source h
+        , this.pos.x                // dest x
+        , this.pos.y                // dest y
+        , fruitImages[this.type].w  // dest w
+        , fruitImages[this.type].h  // dest h
+    );
 }
 
 Fruit.prototype.toString = function () {
