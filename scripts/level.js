@@ -69,18 +69,49 @@ Level.prototype.update = function (canvas) {
 
 
 // ----- Helper functions -----------------------------------------------------
-// TODO: make sure these are sufficiently spread out
-//       and sufficiently far away from the dropoff point
+// growTrees() - split the region into a grid with 100x100 pixel cells,
+//               then randomly pick unoccupied cells to put new trees in
 function growTrees (numTrees, region) {
-    var trees = [], pos, type;
-    for (var i = 0; i < numTrees; ++i) {
-        pos = {
-            x: Math.random() * (region.w - 70) + region.x,
-            y: Math.random() * (region.h - 96) + region.y
-        };
-        type = treeTypes[ Math.floor(Math.random() * treeTypes.length) ];
-        trees.push(new Tree(type, pos));
+    var grid = [], cellsize = { w: 100, h: 100 },
+        trees = [],
+        pos, type,
+        i, j;
+
+    // Validate the region size
+    if (region.w < cellsize.w || region.h < cellsize.h) {
+        console.log("Warning: tree region too small for grid");
+        return trees;
     }
+
+    // Setup the grid array
+    for (i = 0; i < (region.w / cellsize.w); ++i) {
+        grid[i] = [];
+        for (j = 0; j < (region.h / cellsize.h); ++j) {
+            grid[i][j] = { occupied: false };
+        }
+    }
+
+    // Set aside grid[0][0] for store
+    grid[0][0].occupied = true;
+
+    // Randomly place trees into unoccupied cells
+    while (numTrees > 0) {
+        i = Math.floor(Math.random() * (grid.length - 1));
+        j = Math.floor(Math.random() * (grid[0].length - 1));
+
+        if (grid[i][j].occupied === false) {
+            pos = {
+                x: i * cellsize.w + region.x,
+                y: j * cellsize.h + region.y
+            };
+            type = treeTypes[ Math.floor(Math.random() * treeTypes.length) ];
+            trees.push(new Tree(type, pos));
+
+            grid[i][j].occupied = true;
+            --numTrees;
+        }
+    }
+
     return trees;
 };
 
