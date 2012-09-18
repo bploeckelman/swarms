@@ -82,7 +82,7 @@ Flock.prototype.init = function () {
     var type, pos, vel, speed;
     type  = boidTypes[Math.floor(Math.random() * boidTypes.length)];
     for (var i = 0; i < this.boids.length; ++i) {
-        speed = 1;
+        speed = 1.75;
         pos  = {
             x: (Math.random() * 30 - 15) + this.target.pos.x + 20,
             y: (Math.random() * 30 - 15) + this.target.pos.y + 20
@@ -157,19 +157,29 @@ Flock.prototype.update = function (canvas) {
                 y: (perceivedCenterOfMass.y - boid.pos.y) / 1000.0
             };
             return orientation;
-        } 
+        },
+        // Steer towards the flock's target
+        "target" : function (boid, boids, flock) {
+            var orientation = {
+                // FIXME: this +30 business is to target nearer the center of a tree
+                //        all the images should have a nicer way to get center pos + size
+                x: (flock.target.pos.x + 30 - boid.pos.x) / 100,
+                y: (flock.target.pos.y + 30 - boid.pos.y) / 100
+            };
+            return orientation;
+        }
     };
 
     // Apply rules to each flock
     for (var i = 0; i < this.boids.length; ++i) {
         var func, vec;
-        this.boids[i].norm();
         for (rule in rules) {
             func = rules[rule];
-            vec  = func(this.boids[i], this.boids);
+            vec  = func(this.boids[i], this.boids, this);
             this.boids[i].vel.x += vec.x;
             this.boids[i].vel.y += vec.y;
         }
+        this.boids[i].norm();
         this.boids[i].move(canvas);
     }
 };
