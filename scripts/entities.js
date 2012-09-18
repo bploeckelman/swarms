@@ -112,6 +112,7 @@ Fruit.prototype.update = function () {
     } else if (this.dropped) {
         if (this.age > 2*this.lifetime) {
             this.rotten = true;
+            this.dropped = false;
             this.image = images.boid_orange;
         }
     } else if (this.age > this.lifetime) {
