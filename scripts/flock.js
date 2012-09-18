@@ -31,7 +31,7 @@ Boid.prototype.draw = function (context) {
 Boid.prototype.move = function (canvas) {
     this.pos.x += this.vel.x;
     this.pos.y += this.vel.y;
-    /*
+
     if (this.pos.x > canvas.width) {
         if (this.vel.x > 0) {
             this.vel.x *= -1;
@@ -53,12 +53,11 @@ Boid.prototype.move = function (canvas) {
             this.vel.y *= -1;
         }
     }
-    */
 }
 
 Boid.prototype.norm = function () {
     var z = Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y);
-    if (z < 0.0001) {
+    if (z < 0.001) {
         this.vel.x = (Math.random() - 0.5) * this.speed;
         this.vel.y = (Math.random() - 0.5) * this.speed;
         this.norm();
@@ -83,10 +82,10 @@ Flock.prototype.init = function () {
     var type, pos, vel, speed;
     type  = boidTypes[Math.floor(Math.random() * boidTypes.length)];
     for (var i = 0; i < this.boids.length; ++i) {
-        speed = Math.random() < 0.5 ? -1 : 1;
+        speed = 1;
         pos  = {
-            x: (Math.random() * 30 - 15) + this.target.pos.x + 10,
-            y: (Math.random() * 30 - 15) + this.target.pos.y + 10
+            x: (Math.random() * 30 - 15) + this.target.pos.x + 20,
+            y: (Math.random() * 30 - 15) + this.target.pos.y + 20
         };
         vel  = { x: 0, y: 0 };
         this.boids[i] = new Boid(type, pos, vel, speed);
