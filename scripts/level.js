@@ -23,13 +23,24 @@ var Level = function (numTrees, region) {
 
 // ----- Level prototype methods ----------------------------------------------
 Level.prototype.draw = function (context) {
-    for (var i = 0; i < this.trees.length; ++i) {
-        this.trees[i].draw(context);
-    }    
+    var fruits = [], i;
 
+    // Draw all trees
+    for (i = 0; i < this.trees.length; ++i) {
+        this.trees[i].draw(context);
+        fruits = fruits.concat(this.trees[i].fruits);
+    }
+
+    // Draw all fruits
+    for (i = 0; i < fruits.length; ++i) {
+        fruits[i].draw(context);
+    }
+
+    // Draw shop and player
     this.shop.draw(context);
     this.farmer.draw(context);
-    
+
+    // Draw all flocks
     for (var i = 0; i < this.flocks.length; ++i) {
         this.flocks[i].draw(context);
     }

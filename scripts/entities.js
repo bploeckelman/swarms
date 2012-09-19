@@ -62,9 +62,6 @@ Tree.prototype.draw = function (context) {
             , treeImages[this.type].w  // dest w
             , treeImages[this.type].h  // dest h
     );
-    for (var i = 0; i < this.fruits.length; ++i) {
-        this.fruits[i].draw(context);
-    }
 }
 
 Tree.prototype.fruit = function () {
@@ -76,8 +73,8 @@ Tree.prototype.fruit = function () {
     }
     if (numNonRotten < 3) {
         fruit = new Fruit("apple", this);
-        fruit.pos.x += Math.random() * 30;
-        fruit.pos.y += Math.random() * 45;
+        fruit.pos.x += Math.random() * 40 + 10;
+        fruit.pos.y += 20;
         this.fruits.push(fruit);        
     }
 }
