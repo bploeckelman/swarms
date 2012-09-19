@@ -44,7 +44,7 @@ Level.prototype.update = function (canvas) {
                 if (!parentTreeIsSwarmed) {
                     var flock = new Flock(parentTree, 
                                           Object.create(parentTree.pos), 
-                                          10);
+                                          20);
                     flock.init();
                     this.flocks.push(flock);
                 }
@@ -54,6 +54,8 @@ Level.prototype.update = function (canvas) {
             if (collides(this.farmer, this.trees[i].fruits[j]) &&
                 this.trees[i].fruits[j].dropped) {
                 this.trees[i].fruits[j].remove();
+                ++this.farmer.numFruits;
+                console.log(this.farmer.numFruits);
             }
         }
     }

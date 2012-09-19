@@ -8,8 +8,8 @@ var Entity = function (name, pos, image) {
 }
 
 Entity.prototype.distance = function (other) {
-    return Math.sqrt(Math.exp(this.pos.x - other.pos.x, 2),
-                     Math.exp(this.pos.y - other.pos.y, 2));
+    return Math.sqrt(Math.exp(this.pos.x - other.pos.x, 2)
+                   + Math.exp(this.pos.y - other.pos.y, 2));
 }
 
 Entity.prototype.toString = function () {
@@ -87,6 +87,7 @@ Tree.prototype.toString = function () {
 // ----------------------------------------------------------------------------
 //     Fruit
 // ----------------------------------------------------------------------------
+/* Unused...
 var fruitImages = {
       "cherry"     : { x:   0, y: 0, w: 22, h: 22 }
     , "strawberry" : { x:  24, y: 0, w: 20, h: 22 }
@@ -96,9 +97,10 @@ var fruitImages = {
     , "grapes"     : { x: 120, y: 0, w: 18, h: 22 }
 };
 var fruitTypes = Object.keys(fruitImages);
+*/
 
 var Fruit = function (type, tree) {
-    Entity.call(this, "fruit", Object.create(tree.pos), images.fruits);
+    Entity.call(this, "fruit", Object.create(tree.pos), images.apple_good);
     this.type = type;
     this.parentTree = tree;
     this.lifetime = Math.random() * 200 + 100;
@@ -123,28 +125,18 @@ Fruit.prototype.update = function () {
         if (this.age > 2*this.lifetime) {
             this.rotten = true;
             this.dropped = false;
-            this.type = "grapes";
+            this.image = images.apple_bad;
         }
     } else if (this.age > this.lifetime) {
         this.dropped = true;
         this.pos.y += 60;
-        this.type = "orange";
+        this.image = images.apple_ok;
     }
 }
 
 
 Fruit.prototype.draw = function (context) {
-    context.drawImage(
-          this.image       // source image
-        , fruitImages[this.type].x  // source x
-        , fruitImages[this.type].y  // source y
-        , fruitImages[this.type].w  // source w
-        , fruitImages[this.type].h  // source h
-        , this.pos.x                // dest x
-        , this.pos.y                // dest y
-        , fruitImages[this.type].w  // dest w
-        , fruitImages[this.type].h  // dest h
-    );
+    context.drawImage(this.image, this.pos.x, this.pos.y);
 }
 
 Fruit.prototype.toString = function () {
@@ -160,6 +152,7 @@ var Farmer = function (pos) {
     this.health = 100;
     this.spray  = 100;
     this.speed  =  3;
+    this.numFruits = 0;
 };
 
 Farmer.prototype.update = function (dir) {
@@ -174,6 +167,10 @@ Farmer.prototype.update = function (dir) {
     }
     if (keyState[83]) {
         this.pos.y += this.speed;
+    }
+    if (keyState[32]) {
+        // TODO: spray (in what direction?)
+        // TODO: how to get spray to affect flocks?
     }
 }
 
