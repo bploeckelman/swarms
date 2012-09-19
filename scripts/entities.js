@@ -7,6 +7,9 @@ var Entity = function (name, pos, image) {
     this.image= image;
 }
 
+// TODO:
+//Entity.prototype.draw = function (context, srcpos, srcsize, dstpos, dstsize) { }
+
 Entity.prototype.distance = function (other) {
     return Math.sqrt(Math.exp(this.pos.x - other.pos.x, 2)
                    + Math.exp(this.pos.y - other.pos.y, 2));
@@ -134,7 +137,6 @@ Fruit.prototype.update = function () {
     }
 }
 
-
 Fruit.prototype.draw = function (context) {
     context.drawImage(this.image, this.pos.x, this.pos.y);
 }
@@ -149,13 +151,18 @@ Fruit.prototype.toString = function () {
 // ----------------------------------------------------------------------------
 var Farmer = function (pos) {
     Entity.call(this, "farmer", pos, images.farmer);
-    this.health = 100;
-    this.spray  = 100;
-    this.speed  =  3;
-    this.numFruits = 0;
+    this.health     = 100;
+    this.spray      = 100;
+    this.topSpeed   = 4;
+    this.speed      = 4;
+    this.numFruits  = 0;
+    this.carryLimit = 20;
 };
 
 Farmer.prototype.update = function (dir) {
+    var carryingCapacityUsed = this.numFruits / this.carryLimit;
+    this.speed = this.topSpeed - this.topSpeed * carryingCapacityUsed;
+
     if (keyState[68]) {
         this.pos.x += this.speed;
     }

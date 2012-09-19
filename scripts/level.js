@@ -7,9 +7,18 @@
 // ----------------------------------------------------------------------------
 var Level = function (numTrees, region) {
     this.trees  = growTrees(numTrees, region);
-    this.shop   = { pos : { x: 0, y: 0 } };
-    this.farmer = new Farmer({ x: 0, y: 0 });
     this.flocks = new Array();
+    this.farmer = new Farmer({ x: 0, y: 0 });
+    // TODO: make an entity
+    this.shop   = {
+        image: images.shop,
+        pos : { x: 0, y: 0 },
+        size: { w: 100, h: 60 },
+        stockpile: 0,
+        draw: function (context) {
+            context.drawImage(this.image, this.pos.x, this.pos.y);
+        }
+    };
 };
 
 // ----- Level prototype methods ----------------------------------------------
@@ -17,7 +26,8 @@ Level.prototype.draw = function (context) {
     for (var i = 0; i < this.trees.length; ++i) {
         this.trees[i].draw(context);
     }    
-    context.drawImage(images.shop, this.shop.pos.x, this.shop.pos.y);
+
+    this.shop.draw(context);
     this.farmer.draw(context);
     
     for (var i = 0; i < this.flocks.length; ++i) {
@@ -55,7 +65,7 @@ Level.prototype.update = function (canvas) {
                 this.trees[i].fruits[j].dropped) {
                 this.trees[i].fruits[j].remove();
                 ++this.farmer.numFruits;
-                console.log(this.farmer.numFruits);
+                console.log("carrying " + this.farmer.numFruits + " fruits");
             }
         }
     }
@@ -67,6 +77,16 @@ Level.prototype.update = function (canvas) {
     
     // Update the player
     this.farmer.update();
+
+    // Check for player-shop collision
+    if (collides(this.farmer, this.shop)) {
+        // TODO: track cash for dropoffs?
+        if (this.farmer.numFruits > 0) {
+            console.log("cashing in " + this.farmer.numFruits + " fruits");
+            this.shop.stockpile += this.farmer.numFruits;
+            this.farmer.numFruits = 0;
+        }
+    }
 };
 
 
