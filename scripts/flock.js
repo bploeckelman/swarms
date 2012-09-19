@@ -76,6 +76,7 @@ var Flock = function (target, initialPos, initialHealth) {
     this.pos    = initialPos;
     this.health = initialHealth;
     this.boids  = new Array(initialHealth);
+    this.debug  = true;
 };
 
 Flock.prototype.init = function () {
@@ -185,9 +186,63 @@ Flock.prototype.update = function (canvas) {
 };
 
 Flock.prototype.draw = function (context) {
+    var min = { x: Number.MAX_VALUE, y: Number.MAX_VALUE },
+        max = { x: Number.MIN_VALUE, y: Number.MIN_VALUE },
+        center = { x: 0, y: 0 },
+        avgVel = { x: 0, y: 0 },
+        dist = 0,
+        radius = 1,
+        fullCircle = 2 * Math.PI;
+
     for (var i = 0; i < this.boids.length; ++i) {
         this.boids[i].draw(context);
+
+        if (this.debug === true) {
+            // Calculate min/max positions for flock
+            // TODO: 16 is the size of a boid using the current image shouldn't be hard coded
+            min.x = Math.min(min.x, this.boids[i].pos.x + 16);
+            min.y = Math.min(min.y, this.boids[i].pos.y + 16);
+            max.x = Math.max(max.x, this.boids[i].pos.x);
+            max.y = Math.max(max.y, this.boids[i].pos.y);
+
+            // Sum velocities for each boid for average velocity calculation
+            avgVel.x += this.boids[i].vel.x;
+            avgVel.y += this.boids[i].vel.y;
+        }
     }
-    // TODO: add some debug drawing stuff like a circle around the flock, 
-    //       average velocity vector, "health" (ie. num boids), etc...
+
+    // TODO: add some debug drawing stuff like "health" (ie. num boids), etc...
+
+    if (this.debug === true) {
+        // Calculate center position and radius of bounding circle for flock
+        center.x = ((max.x - min.x) / 2) + min.x;
+        center.y = ((max.y - min.y) / 2) + min.y;
+        radius = Math.max(max.x - min.x, max.y - min.y);
+
+        // Flock bounding circle
+        context.strokeStyle = "#999900";
+        context.beginPath();
+        context.arc(center.x, center.y, radius, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+
+        // Flock center pos
+        context.fillStyle = "#000099";
+        context.beginPath();
+        context.arc(center.x, center.y, 3, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+        context.fill();
+
+        // Calculate average velocity of flock and draw a vector for it
+        dist = Math.sqrt(avgVel.x * avgVel.x + avgVel.y * avgVel.y);
+        avgVel.x /= dist;
+        avgVel.y /= dist;
+        context.strokeStyle = "#009999";
+        context.beginPath();
+        context.moveTo(center.x, center.y);
+        context.lineTo(center.x + radius * avgVel.x, center.y + radius * avgVel.y);
+        context.closePath();
+        context.stroke();
+    }
 };
