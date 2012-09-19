@@ -144,12 +144,62 @@ Fruit.prototype.toString = function () {
 
 
 // ----------------------------------------------------------------------------
+//     GasCloud
+// ----------------------------------------------------------------------------
+var GasCloud = function (pos, dir) {
+    Entity.call(this, "gascloud", pos, images.bubble);
+    this.pos    = pos;
+    this.dir    = dir;
+    this.size   = { w: 8, h: 8 };
+    this.maxSize = { w: 64, h: 64 };
+    this.speed  = 1.5;
+    this.age    = 0;
+    this.expand = 0.75;
+};
+
+GasCloud.prototype.update = function () {
+    // Expand and dissapate over time
+    // TODO: should probably age as function of elapsed time, 
+    //       not elapsed num frames
+    if (++this.age < 180) {
+        // Update position
+        this.pos.x += this.dir.x * this.speed;
+        this.pos.y += this.dir.y * this.speed;
+        
+        // Update size
+        this.size.w += this.expand;
+        this.size.h += this.expand;
+        if (this.size.w > this.maxSize.w) {
+            this.size.w = this.maxSize.w;
+        }
+        if (this.size.h > this.maxSize.h) {
+            this.size.h = this.maxSize.h;
+        }
+        
+        // This cloud is not too old yet
+        return true;
+    } else {
+        // This cloud is too old and should be removed
+        return false;
+    }
+}
+
+GasCloud.prototype.draw = function (context) {
+    context.drawImage(this.image, 
+        this.pos.x, this.pos.y,
+        this.size.w, this.size.h
+    );
+}
+
+
+// ----------------------------------------------------------------------------
 //     Farmer
 // ----------------------------------------------------------------------------
 var Farmer = function (pos) {
     Entity.call(this, "farmer", pos, images.farmer);
     this.health     = 100;
-    this.spray      = 100;
+    this.sprayAmt   = 100;
+    this.sprayCost  = 10;
     this.topSpeed   = 4;
     this.speed      = 4;
     this.numFruits  = 0;
@@ -172,14 +222,38 @@ Farmer.prototype.update = function (dir) {
     if (keyState[83]) {
         this.pos.y += this.speed;
     }
-    if (keyState[32]) {
-        // TODO: spray (in what direction?)
-        // TODO: how to get spray to affect flocks?
-    }
 }
 
 Farmer.prototype.draw = function (context) {
     context.drawImage(this.image, this.pos.x, this.pos.y);
+}
+
+Farmer.prototype.spray = function (dir) {
+    // Originate spray from center of farmer
+    // TODO: should be stored in image
+    var sprayPos = Object.create(this.pos);
+    sprayPos.x += 32;
+    sprayPos.y += 32;
+    
+    this.sprayAmt -= this.sprayCost;
+    
+    return new GasCloud(sprayPos, dir);
+}
+
+Farmer.prototype.handleClick = function (clickPos) {
+    if (this.sprayAmt <= 0) {
+        return null;
+    }
+    
+    var dir = {
+            x: clickPos.x - this.pos.x,
+            y: clickPos.y - this.pos.y
+        },
+        dist = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
+    dir.x /= dist;
+    dir.y /= dist;
+    
+    return this.spray(dir);
 }
 
 Farmer.prototype.toString = function () {

@@ -76,7 +76,7 @@ var Flock = function (target, initialPos, initialHealth) {
     this.pos    = initialPos;
     this.health = initialHealth;
     this.boids  = new Array(initialHealth);
-    this.debug  = true;
+    this.debug  = false;
 };
 
 Flock.prototype.init = function () {

@@ -116,7 +116,20 @@ window.addEventListener('keyup', function(e) {
     }
 
     // ------------------------------------------------------------------
-    function drawLoop() {
+    canvas.addEventListener("click", function (event) {
+        var gascloud = level.farmer.handleClick({
+            x: event.pageX - canvas.offsetLeft,
+            y: event.pageY - canvas.offsetTop
+        });
+        if (gascloud !== null) {
+            level.gasclouds.push(gascloud);
+        }
+    }, false);
+
+    // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
+    (function drawLoop() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         // Draw background image
@@ -129,18 +142,6 @@ window.addEventListener('keyup', function(e) {
         level.draw(context);
 
         reqFrame(drawLoop);
-    }
-
-    // ------------------------------------------------------------------
-    function handleClick(evt) {
-        console.log(evt);
-    }
-    canvas.addEventListener("click", handleClick, false);
-
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-
-    drawLoop();
+    }) ();
 
 })();
