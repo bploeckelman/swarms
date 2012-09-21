@@ -196,9 +196,10 @@ var GasCloud = function (pos, dir) {
     this.pos    = pos;
     this.dir    = dir;
     this.size   = { w: 8, h: 8 };
-    this.maxSize = { w: 64, h: 64 };
-    this.speed  = 1.5;
+    this.maxSize = { w: 128, h: 128 };
+    this.speed  = 4.5;
     this.age    = 0;
+    this.maxAge = 200;
     this.expand = 0.75;
 };
 
@@ -206,7 +207,7 @@ GasCloud.prototype.update = function () {
     // Expand and dissapate over time
     // TODO: should probably age as function of elapsed time, 
     //       not elapsed num frames
-    if (++this.age < 180) {
+    if (++this.age < this.maxAge) {
         // Update position
         this.pos.x += this.dir.x * this.speed;
         this.pos.y += this.dir.y * this.speed;
@@ -221,6 +222,9 @@ GasCloud.prototype.update = function () {
             this.size.h = this.maxSize.h;
         }
         
+        // Slow down
+        this.speed *= 0.98;
+        
         // This cloud is not too old yet
         return true;
     } else {
@@ -230,10 +234,12 @@ GasCloud.prototype.update = function () {
 };
 
 GasCloud.prototype.draw = function (context) {
+    context.globalAlpha = (this.maxAge - this.age) / this.maxAge;
     context.drawImage(this.image, 
         this.pos.x, this.pos.y,
         this.size.w, this.size.h
     );
+    context.globalAlpha = 1.0;
     
     if (this.debug) {
         var center = this.center(),
