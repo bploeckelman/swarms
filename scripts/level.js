@@ -110,7 +110,7 @@ Level.prototype.update = function (canvas) {
             for (j = 0; j < this.flocks.length; ++j) {
                 flock = this.flocks[j];
                 if (cloud.overlaps(flock)) {
-                    flock.damage(1);
+                    flock.damage(.01);
                     // TODO: bug here somewhere, Flock.damage sometimes leaves 1 boid
                     //       lingering around with NaN position, also flocks don't
                     //       respawn consistently and I'm not sure why yet.

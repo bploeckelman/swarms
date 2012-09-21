@@ -71,13 +71,13 @@ Boid.prototype.norm = function () {
 // ----------------------------------------------------------------------------
 //     Flock
 // ----------------------------------------------------------------------------
-var Flock = function (target, initialPos, initialHealth) {
+var Flock = function (target, initialPos, numBoids) {
     this.target = target;
     this.pos    = initialPos;
     this.origin = initialPos;
-    this.health = initialHealth;
+    this.health = numBoids;
     this.rad    = 1.0;
-    this.boids  = new Array(initialHealth);
+    this.boids  = new Array(numBoids);
     // TODO: bug in debug drawing context.arc gives index size error?
     this.debug  = false;
 
@@ -102,9 +102,11 @@ Flock.prototype.init = function () {
 };
 
 Flock.prototype.damage = function (amount) {
-    if (amount < 1) { return; }
-    this.boids.splice(0,amount);
-    this.health = this.boids.length;
+    this.health -= amount;
+    if (this.health <= (this.boids.length - 1)) {
+        this.boids.splice(0, 20 - Math.ceil(this.health));
+}
+    //this.health = this.boids.length;
 }
 
 Flock.prototype.update = function (canvas) {
