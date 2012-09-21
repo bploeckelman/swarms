@@ -316,15 +316,8 @@ Farmer.prototype.draw = function (context) {
 };
 
 Farmer.prototype.spray = function (dir) {
-    // Originate spray from center of farmer
-    // TODO: should be stored in image
-    var sprayPos = Object.create(this.pos);
-    sprayPos.x += 32;
-    sprayPos.y += 32;
-    
     this.sprayAmt -= this.sprayCost;
-    
-    return new GasCloud(sprayPos, dir);
+    return new GasCloud(this.center(), dir);
 };
 
 Farmer.prototype.handleClick = function (clickPos) {
@@ -332,9 +325,10 @@ Farmer.prototype.handleClick = function (clickPos) {
         return null;
     }
     
-    var dir = {
-            x: clickPos.x - this.pos.x,
-            y: clickPos.y - this.pos.y
+    var center = this.center(),
+        dir = {
+            x: clickPos.x - center.x,
+            y: clickPos.y - center.y
         },
         dist = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
     dir.x /= dist;
