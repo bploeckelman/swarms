@@ -2,22 +2,47 @@
 //     Entity
 // ----------------------------------------------------------------------------
 var Entity = function (name, pos, image) {
-    this.name = name;
-    this.pos  = pos;
-    this.image= image;
-}
+    this.name   = name;
+    this.pos    = pos;
+    this.image  = image;
+    this.width  = image.width;
+    this.height = image.height;
+    this.debug  = false;
+    
+    this.center = function () {
+        return {
+            x: this.pos.x + (this.width  / 2),
+            y: this.pos.y + (this.height / 2)
+        };
+    };
+    
+    this.radius = function () {
+        // TODO: might not be the best way to handle this 
+        return Math.min(this.width / 2, this.height / 2);
+    };
+    
+    this.overlaps = function (other) {
+        return (this.distance(other) < (this.radius() + other.radius()));
+    };
+    
+    this.distance = function (other) {
+        return Math.sqrt(this.distSquared(other));
+    };
+    
+    this.distSquared = function (other) {
+        var thisCenter  = this.center(),
+            otherCenter = other.center();
+        return Math.pow(thisCenter.x - otherCenter.x, 2)
+             + Math.pow(thisCenter.y - otherCenter.y, 2);
+    };
 
 // TODO:
 //Entity.prototype.draw = function (context, srcpos, srcsize, dstpos, dstsize) { }
-
-Entity.prototype.distance = function (other) {
-    return Math.sqrt(Math.exp(this.pos.x - other.pos.x, 2)
-                   + Math.exp(this.pos.y - other.pos.y, 2));
-}
+};
 
 Entity.prototype.toString = function () {
     return 'Entity : [ "'+this.name+'" @ ('+this.pos.x+','+this.pos.y+') ]';
-}
+};
 
 // ----------------------------------------------------------------------------
 //     Tree
@@ -30,14 +55,13 @@ var treeImages = {
 };
 var treeTypes = Object.keys(treeImages);
 
-
 var Tree = function (type, pos) {
     Entity.call(this, "tree", pos, images.trees_large);
     this.type = type;
     this.timer = 0;
     this.fruitTime = Math.random() * 500 + 100;
     this.fruits = [];
-}
+};
 
 Tree.prototype.update = function () {
     this.timer += 1;
@@ -48,7 +72,7 @@ Tree.prototype.update = function () {
     for (var i = 0; i < this.fruits.length; ++i) {
         this.fruits[i].update();
     }
-}
+};
 
 Tree.prototype.draw = function (context) {
     context.drawImage(
@@ -62,7 +86,7 @@ Tree.prototype.draw = function (context) {
             , treeImages[this.type].w  // dest w
             , treeImages[this.type].h  // dest h
     );
-}
+};
 
 Tree.prototype.fruit = function () {
     var fruit, numNonRotten = 0;
@@ -77,11 +101,11 @@ Tree.prototype.fruit = function () {
         fruit.pos.y += 20;
         this.fruits.push(fruit);        
     }
-}
+};
 
 Tree.prototype.toString = function () {
     return Entity.prototype.toString.call(this)+' type: '+this.type;
-}
+};
 
 
 // ----------------------------------------------------------------------------
@@ -112,7 +136,7 @@ var Fruit = function (type, tree) {
 Fruit.prototype.remove = function () {
      var thisIndex = this.parentTree.fruits.indexOf(this);
      this.parentTree.fruits.splice(thisIndex, 1);
-}
+};
 
 Fruit.prototype.update = function () {
     this.age += 1;
@@ -132,15 +156,36 @@ Fruit.prototype.update = function () {
         this.pos.y += 60;
         this.image = images.apple_ok;
     }
-}
+};
 
 Fruit.prototype.draw = function (context) {
     context.drawImage(this.image, this.pos.x, this.pos.y);
-}
+    
+    if (this.debug) {
+        var center = this.center(),
+            radius = this.radius(),
+            fullCircle = 2 * Math.PI;
+            
+        // Bounding circle
+        context.strokeStyle = "#aaaa00";
+        context.beginPath();
+        context.arc(center.x, center.y, radius, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+
+        // Center pos
+        context.fillStyle = "#0000aa";
+        context.beginPath();
+        context.arc(center.x, center.y, 3, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+        context.fill();
+    }
+};
 
 Fruit.prototype.toString = function () {
     return Entity.prototype.toString.call(this)+' type: '+this.type;
-}
+};
 
 
 // ----------------------------------------------------------------------------
@@ -182,14 +227,35 @@ GasCloud.prototype.update = function () {
         // This cloud is too old and should be removed
         return false;
     }
-}
+};
 
 GasCloud.prototype.draw = function (context) {
     context.drawImage(this.image, 
         this.pos.x, this.pos.y,
         this.size.w, this.size.h
     );
-}
+    
+    if (this.debug) {
+        var center = this.center(),
+            radius = this.radius(),
+            fullCircle = 2 * Math.PI;
+            
+        // Bounding circle
+        context.strokeStyle = "#aaaa00";
+        context.beginPath();
+        context.arc(center.x, center.y, radius, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+
+        // Center pos
+        context.fillStyle = "#0000aa";
+        context.beginPath();
+        context.arc(center.x, center.y, 3, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+        context.fill();
+    }
+};
 
 
 // ----------------------------------------------------------------------------
@@ -222,11 +288,32 @@ Farmer.prototype.update = function (dir) {
     if (keyState[83]) {
         this.pos.y += this.speed;
     }
-}
+};
 
 Farmer.prototype.draw = function (context) {
     context.drawImage(this.image, this.pos.x, this.pos.y);
-}
+    
+    if (this.debug) {
+        var center = this.center(),
+            radius = this.radius(),
+            fullCircle = 2 * Math.PI;
+            
+        // Bounding circle
+        context.strokeStyle = "#aaaa00";
+        context.beginPath();
+        context.arc(center.x, center.y, radius, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+
+        // Center pos
+        context.fillStyle = "#0000aa";
+        context.beginPath();
+        context.arc(center.x, center.y, 3, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+        context.fill();
+    }
+};
 
 Farmer.prototype.spray = function (dir) {
     // Originate spray from center of farmer
@@ -238,7 +325,7 @@ Farmer.prototype.spray = function (dir) {
     this.sprayAmt -= this.sprayCost;
     
     return new GasCloud(sprayPos, dir);
-}
+};
 
 Farmer.prototype.handleClick = function (clickPos) {
     if (this.sprayAmt <= 0) {
@@ -254,8 +341,25 @@ Farmer.prototype.handleClick = function (clickPos) {
     dir.y /= dist;
     
     return this.spray(dir);
-}
+};
 
 Farmer.prototype.toString = function () {
     return Entity.prototype.toString.call(this);
-}
+};
+
+
+// ----------------------------------------------------------------------------
+//     Shop
+// ----------------------------------------------------------------------------
+var Shop = function (pos) {
+    Entity.call(this, "shop", pos, images.shop);
+    stockpile: 0;
+};
+
+Shop.prototype.draw = function (context) {
+    context.drawImage(this.image, this.pos.x, this.pos.y);
+};
+
+Shop.prototype.toString = function () {
+    return Entity.prototype.toString.call(this);
+};
