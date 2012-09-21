@@ -204,7 +204,6 @@ var GasCloud = function (pos, dir) {
     this.age    = 0;
     this.maxAge = 200;
     this.expand = 0.75;
-    this.debug  = true;
 };
 
 GasCloud.prototype.update = function () {
@@ -282,8 +281,6 @@ var Farmer = function (pos) {
 };
 
 Farmer.prototype.update = function (dir) {
-    this.debug = true;
-
     var carryingCapacityUsed = this.numFruits / this.carryLimit;
     this.speed = this.topSpeed - this.topSpeed * carryingCapacityUsed;
 

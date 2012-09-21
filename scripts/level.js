@@ -118,8 +118,9 @@ Level.prototype.update = function (canvas) {
                         // Make it so that the dead flock's target (should be tree)
                         // can't spawn new swarms for a few seconds
                         flock.target.canSwarm = false;
+			var tree = flock.target;
                         setTimeout(function () {
-                            flock.target.canSwarm = true;
+                            tree.canSwarm = true;
                         }, 5000);
 
                         // Remove the dead flock from the level's list of flocks
