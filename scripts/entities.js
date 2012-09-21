@@ -61,6 +61,7 @@ var Tree = function (type, pos) {
     this.timer = 0;
     this.fruitTime = Math.random() * 500 + 100;
     this.fruits = [];
+    this.canSwarm = true;
 };
 
 Tree.prototype.update = function () {
@@ -104,7 +105,8 @@ Tree.prototype.fruit = function () {
 };
 
 Tree.prototype.toString = function () {
-    return Entity.prototype.toString.call(this)+' type: '+this.type;
+    return Entity.prototype.toString.call(this)
+         + " type: " + this.type + " canSwarm: " + this.canSwarm;
 };
 
 
@@ -195,12 +197,14 @@ var GasCloud = function (pos, dir) {
     Entity.call(this, "gascloud", pos, images.bubble);
     this.pos    = pos;
     this.dir    = dir;
-    this.size   = { w: 8, h: 8 };
+    this.width  = 8;
+    this.height = 8;
     this.maxSize = { w: 128, h: 128 };
     this.speed  = 4.5;
     this.age    = 0;
     this.maxAge = 200;
     this.expand = 0.75;
+    this.debug  = true;
 };
 
 GasCloud.prototype.update = function () {
@@ -213,15 +217,11 @@ GasCloud.prototype.update = function () {
         this.pos.y += this.dir.y * this.speed;
         
         // Update size
-        this.size.w += this.expand;
-        this.size.h += this.expand;
-        if (this.size.w > this.maxSize.w) {
-            this.size.w = this.maxSize.w;
-        }
-        if (this.size.h > this.maxSize.h) {
-            this.size.h = this.maxSize.h;
-        }
-        
+        this.width  += this.expand;
+        this.height += this.expand;
+        if (this.width  > this.maxSize.w) { this.width  = this.maxSize.w; }
+        if (this.height > this.maxSize.h) { this.height = this.maxSize.h; }
+
         // Slow down
         this.speed *= 0.98;
         
@@ -237,7 +237,7 @@ GasCloud.prototype.draw = function (context) {
     context.globalAlpha = (this.maxAge - this.age) / this.maxAge;
     context.drawImage(this.image, 
         this.pos.x, this.pos.y,
-        this.size.w, this.size.h
+        this.width, this.height
     );
     context.globalAlpha = 1.0;
     
@@ -263,6 +263,9 @@ GasCloud.prototype.draw = function (context) {
     }
 };
 
+GasCloud.prototype.toString = function () {
+    return Entity.prototype.toString.call(this)+' type: '+this.type;
+};
 
 // ----------------------------------------------------------------------------
 //     Farmer
@@ -279,6 +282,8 @@ var Farmer = function (pos) {
 };
 
 Farmer.prototype.update = function (dir) {
+    this.debug = true;
+
     var carryingCapacityUsed = this.numFruits / this.carryLimit;
     this.speed = this.topSpeed - this.topSpeed * carryingCapacityUsed;
 

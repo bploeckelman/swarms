@@ -57,13 +57,16 @@ Level.prototype.update = function (canvas) {
                 parentTreeIsSwarmed = false;
                 
                 for (var f = 0; f < this.flocks.length; ++f) {
-                    if (this.flocks[f].target === parentTree) {
+                    // TODO: bug here somewhere, Flock.damage sometimes leaves 1 boid
+                    //       lingering around with NaN position
+                    if (this.flocks[f].target === parentTree
+                     && this.flocks[f].health > 1) {
                         parentTreeIsSwarmed = true;
                         break;
                     }
                 }
                 
-                if (!parentTreeIsSwarmed) {
+                if (!parentTreeIsSwarmed && parentTree.canSwarm) {
                     flock = new Flock(parentTree, Object.create(parentTree.pos), 20);
                     flock.init();
                     this.flocks.push(flock);
@@ -103,13 +106,26 @@ Level.prototype.update = function (canvas) {
     for (i = 0; i < this.gasclouds.length; ++i) {
         cloud = this.gasclouds[i];
         if (cloud.update()) {
-            // TODO: Handle collisions with flocks
+            // Handle collision with flocks
             for (j = 0; j < this.flocks.length; ++j) {
-                // TODO: can't use collides, flock has no individual image
-                //       have to start using bounding circles for collision
-                //if (collides(cloud, this.flocks[j])) {
-                    // Injure flock, removing boids until health == 0
-                //}
+                flock = this.flocks[j];
+                if (cloud.overlaps(flock)) {
+                    flock.damage(1);
+                    // TODO: bug here somewhere, Flock.damage sometimes leaves 1 boid
+                    //       lingering around with NaN position, also flocks don't
+                    //       respawn consistently and I'm not sure why yet.
+                    if (flock.health <= 1) {
+                        // Make it so that the dead flock's target (should be tree)
+                        // can't spawn new swarms for a few seconds
+                        flock.target.canSwarm = false;
+                        setTimeout(function () {
+                            flock.target.canSwarm = true;
+                        }, 5000);
+
+                        // Remove the dead flock from the level's list of flocks
+                        this.flocks.splice(j,1);
+                    }
+                }
             }
         } else {
             // Remove this cloud, it is too old
