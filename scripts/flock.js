@@ -76,6 +76,7 @@ var Flock = function (target, initialPos, numBoids) {
     this.pos    = initialPos;
     this.origin = initialPos;
     this.health = numBoids;
+    this.accum = 0.0;
     this.rad    = 1.0;
     this.boids  = new Array(numBoids);
     // TODO: bug in debug drawing context.arc gives index size error?
@@ -103,10 +104,11 @@ Flock.prototype.init = function () {
 
 Flock.prototype.damage = function (amount) {
     this.health -= amount;
-    if (this.health <= (this.boids.length - 1)) {
-        this.boids.splice(0, 20 - Math.ceil(this.health));
-}
-    //this.health = this.boids.length;
+    this.accum += amount;
+    if (this.accum > 1) {
+        this.boids.splice(0, Math.floor(this.accum));
+        this.accum = 0.0;
+    }
 }
 
 Flock.prototype.update = function (canvas) {

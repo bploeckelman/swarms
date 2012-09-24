@@ -44,7 +44,7 @@ Level.prototype.draw = function (context) {
 };
 
 Level.prototype.update = function (canvas) {
-    var i, j, parentTree, parentTreeIsSwarmed, flock, cloud;
+    var i, j, parentTree, parentTreeIsSwarmed, flock, cloud, tree;
 
     // Update trees/fruit
     for (i = this.trees.length - 1; i >= 0; --i) {
@@ -85,7 +85,7 @@ Level.prototype.update = function (canvas) {
     }
     
     // Update flocks
-    for (var i = 0; i < this.flocks.length; ++i) {
+    for (i = 0; i < this.flocks.length; ++i) {
         this.flocks[i].update(canvas);
     }
     
@@ -110,15 +110,15 @@ Level.prototype.update = function (canvas) {
             for (j = 0; j < this.flocks.length; ++j) {
                 flock = this.flocks[j];
                 if (cloud.overlaps(flock)) {
-                    flock.damage(.01);
+                    flock.damage(.025);
                     // TODO: bug here somewhere, Flock.damage sometimes leaves 1 boid
                     //       lingering around with NaN position, also flocks don't
                     //       respawn consistently and I'm not sure why yet.
                     if (flock.health <= 1) {
                         // Make it so that the dead flock's target (should be tree)
                         // can't spawn new swarms for a few seconds
-                        flock.target.canSwarm = false;
-			var tree = flock.target;
+                        tree = flock.target;
+                        tree.canSwarm = false;
                         setTimeout(function () {
                             tree.canSwarm = true;
                         }, 5000);
