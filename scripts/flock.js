@@ -200,6 +200,15 @@ Flock.prototype.update = function (canvas) {
         this.boids[i].norm();
         this.boids[i].move(canvas);
     }
+
+    // Damage the flock's target
+    if (this.boids[0].type === "normal") {
+        this.target.damage(0.025);
+    } else if (this.boids[0].type === "biting") {
+        this.target.damage(0.05);
+    } else if (this.boids[0].type === "poison") {
+        this.target.damage(0.075);
+    }
 };
 
 Flock.prototype.draw = function (context) {

@@ -59,23 +59,45 @@ var Tree = function (type, pos) {
     Entity.call(this, "tree", pos, images.trees_large);
     this.type = type;
     this.timer = 0;
+    this.maxHealth = 100.0;
+    this.health = this.maxHealth;
     this.fruitTime = Math.random() * 500 + 100;
     this.fruits = [];
     this.canSwarm = true;
+    this.buffer = document.createElement('canvas');
 };
 
 Tree.prototype.update = function () {
     this.timer += 1;
+
     if (this.timer > this.fruitTime) {
         this.timer = 0;
         this.fruit();
     }
+
     for (var i = 0; i < this.fruits.length; ++i) {
         this.fruits[i].update();
     }
+
+    return (this.health <= 0);
 };
 
 Tree.prototype.draw = function (context) {
+    // Create an offscreen buffer
+    var bufcontext;
+    this.buffer.width  = this.image.width;
+    this.buffer.height = this.image.height;
+    bufcontext = this.buffer.getContext('2d');
+
+    // Fill buffer with tint color derived from health
+    bufcontext.fillStyle = '#ff0000';
+    bufcontext.fillRect(0, 0, this.buffer.width, this.buffer.height);
+
+    // Destination-atop to apply tint to image
+    bufcontext.globalCompositeOperation = "destination-atop";
+    bufcontext.drawImage(this.image, 0, 0);
+
+    // To tint the image, draw it first
     context.drawImage(
               this.image       // source image
             , treeImages[this.type].x  // source x
@@ -87,6 +109,22 @@ Tree.prototype.draw = function (context) {
             , treeImages[this.type].w  // dest w
             , treeImages[this.type].h  // dest h
     );
+
+    // Then set global alpha to tint amount, and draw it again
+    context.globalAlpha = (this.maxHealth - this.health) / this.maxHealth;
+    context.drawImage(
+              this.buffer       // source image
+            , treeImages[this.type].x  // source x
+            , treeImages[this.type].y  // source y
+            , treeImages[this.type].w  // source w
+            , treeImages[this.type].h  // source h
+            , this.pos.x               // dest x
+            , this.pos.y               // dest y
+            , treeImages[this.type].w  // dest w
+            , treeImages[this.type].h  // dest h
+    );
+    // Reset global alpha
+    context.globalAlpha = 1.0;
 };
 
 Tree.prototype.fruit = function () {
@@ -103,6 +141,10 @@ Tree.prototype.fruit = function () {
         this.fruits.push(fruit);        
     }
 };
+
+Tree.prototype.damage = function (amount) {
+    this.health -= amount;
+}
 
 Tree.prototype.toString = function () {
     return Entity.prototype.toString.call(this)

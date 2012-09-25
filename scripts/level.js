@@ -48,7 +48,11 @@ Level.prototype.update = function (canvas) {
 
     // Update trees/fruit
     for (i = this.trees.length - 1; i >= 0; --i) {
-        this.trees[i].update();
+        // If tree died during update, remove it
+        if (this.trees[i].update()) {
+            this.trees.splice(i,1);
+            continue;
+        }
         
         for (j = this.trees[i].fruits.length - 1; j >= 0; --j){
             // Add a new swarm if appropriate
