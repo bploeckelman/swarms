@@ -318,6 +318,7 @@ var Farmer = function (pos) {
     this.sprayCost  = 10;
     this.topSpeed   = 4;
     this.speed      = 4;
+    this.minSpeed   = 1;
     this.numFruits  = 0;
     this.carryLimit = 20;
 };
@@ -325,6 +326,9 @@ var Farmer = function (pos) {
 Farmer.prototype.update = function (dir) {
     var carryingCapacityUsed = this.numFruits / this.carryLimit;
     this.speed = this.topSpeed - this.topSpeed * carryingCapacityUsed;
+    if (this.speed < this.minSpeed) {
+        this.speed = this.minSpeed;
+    }
 
     if (keyState[68]) {
         this.pos.x += this.speed;
