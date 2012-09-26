@@ -5,23 +5,26 @@
 // ----------------------------------------------------------------------------
 //    Level object
 // ----------------------------------------------------------------------------
+
+
 var Level = function (numTrees, region) {
     this.trees     = growTrees(numTrees, region);
     this.flocks    = [];
     this.gasclouds = [];
     this.shopOpen  = false;
+    this.onShop    = false;
     this.farmer    = new Farmer({ x: 75, y: 75 });
     this.shop      = new Shop({ x: 0, y: 0 });
     this.shopDialog= new Textbox(new Array("Potion    3",
                                            "Spray     4",
                                            "Exit       "),
                                  { x: 75, y: 75},
-                                 300,
+                                 200,
                                  120);
-
-    this.hud       = new Textbox(new Array("Health: 100   Fruits: 0"),
+    this.pointer   = new Pointer(0, this.shopDialog, images.pointer);
+    this.hud       = new Textbox(null,
                                 { x: region.w / 2, y: 4},
-                                 300,
+                                 400,
                                  50);
 };
 
@@ -55,11 +58,14 @@ Level.prototype.draw = function (context) {
     }
 
     // Draw HUD
-    this.hud.text = new Array("Health: " + Math.ceil(this.farmer.health) + " Fruits: " + this.farmer.numFruits);
+    this.hud.text = new Array("Health: " + Math.ceil(this.farmer.health) + 
+                              " Fruits: " + this.farmer.numFruits + 
+                              " Spray: " + this.farmer.sprayAmt);
     this.hud.draw(context);
 
-    if (this.shopOpen) {
+    if (this.shopOpen && this.onShop) {
         this.shopDialog.draw(context);
+        this.pointer.draw(context);
     }
 
 };
@@ -70,6 +76,7 @@ Level.prototype.update = function (canvas) {
     // Update trees/fruit
     
     if (this.shopOpen) {
+        this.shopOpen = this.pointer.update();
         return;
     }
 
@@ -129,13 +136,18 @@ Level.prototype.update = function (canvas) {
     
     // Check for player-shop collision
     if (this.farmer.overlaps(this.shop)) {
-        this.shopOpen = true;
-        // TODO: track cash for dropoffs?
-        if (this.farmer.numFruits > 0) {
-            console.log("cashing in " + this.farmer.numFruits + " fruits");
-            this.shop.stockpile += this.farmer.numFruits;
-            this.farmer.numFruits = 0;
+        if (!this.onShop) {
+            this.shopOpen = true;
+            this.onShop = true;
+            // TODO: track cash for dropoffs?
+            if (this.farmer.numFruits > 0) {
+                console.log("cashing in " + this.farmer.numFruits + " fruits");
+                this.shop.stockpile += this.farmer.numFruits;
+                this.farmer.numFruits = 0;
+            }
         }
+    } else {
+        this.onShop = false;
     }
     
     // Update the gas clouds

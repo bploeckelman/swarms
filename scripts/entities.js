@@ -406,7 +406,7 @@ Farmer.prototype.update = function (dir) {
         this.facing = "down";
         this.pos.y += this.speed;
     }
-    if (keyState[13]) {
+    if (keyState[32]) {
         if (this.sprayAmt <= 0) {
             return null;
         }
