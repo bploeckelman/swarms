@@ -178,17 +178,16 @@ Flock.prototype.update = function (canvas) {
         },
         // Steer towards the flock's target
         "target" : function (boid, boids, flock) {
-            var orientation = {
-                // FIXME: this +30 business is to target nearer the center of a tree
-                //        all the images should have a nicer way to get center pos + size
-                x: (flock.target.pos.x + 30 - boid.pos.x) / 100,
-                y: (flock.target.pos.y + 30 - boid.pos.y) / 100
-            };
+            var center = flock.target.center(),
+                orientation = {
+                    x: (center.x - boid.pos.x) / 100,
+                    y: (center.y - boid.pos.y) / 100
+                };
             return orientation;
         }
     };
 
-    // Apply rules to each flock
+    // Apply rules to each boid in the flock
     for (var i = 0; i < this.boids.length; ++i) {
         var func, vec;
         for (rule in rules) {
@@ -268,6 +267,14 @@ Flock.prototype.draw = function (context) {
                        this.origin.y + this.rad * avgVel.y);
         context.closePath();
         context.stroke();
+
+        // Flock target's center
+        context.fillStyle = "#bbbb22";
+        context.beginPath();
+        context.arc(this.target.center().x, this.target.center().y, 5, 0, fullCircle);
+        context.closePath();
+        context.stroke();
+        context.fill();
     }
 };
 

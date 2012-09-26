@@ -100,6 +100,9 @@ Level.prototype.update = function (canvas) {
     // Update flocks
     for (i = 0; i < this.flocks.length; ++i) {
         this.flocks[i].update(canvas);
+        if (this.flocks[i].target.health === 0.0) {
+            this.flocks[i].target = this.farmer;
+        }
     }
     
     // Update the player
