@@ -18,6 +18,8 @@ Textbox.prototype.draw = function (context) {
 
     context.fillStyle = '#000';
     context.font = "20pt Arial";
-    context.fillText(this.text, this.pos.x + 4, this.pos.y + 35);
+    for (var i = 0; i < this.text.length; ++i) {
+        context.fillText(this.text[i], this.pos.x + 4, this.pos.y + (i + 1)*35);
+    }
 };
 

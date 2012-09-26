@@ -19,8 +19,9 @@ var images = {
         "fruits"     : new Image(),
         "apple_good" : new Image(),
         "apple_ok"   : new Image(),
-        "apple_bad"  : new Image()
-    };
+        "apple_bad"  : new Image(),
+        "farmer12"   : new Image()
+};
 images.grass.src       = "images/grass.png";
 images.bubble.src      = "images/bubble.png";
 images.heart.src       = "images/heart.png";
@@ -36,7 +37,7 @@ images.fruits.src      = "images/pacman-fruit.png";
 images.apple_good.src  = "images/apple-good.png";
 images.apple_ok.src    = "images/apple-dropped.png";
 images.apple_bad.src   = "images/apple-rotten.png";
-
+images.farmer12.src    = "images/farmer12.png"
 var keyState = {};
 window.addEventListener('keydown', function(e) {
     keyState[e.keycode || e.which] = true;

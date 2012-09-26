@@ -9,9 +9,17 @@ var Level = function (numTrees, region) {
     this.trees     = growTrees(numTrees, region);
     this.flocks    = [];
     this.gasclouds = [];
-    this.farmer    = new Farmer({ x: 0, y: 0 });
+    this.shopOpen  = false;
+    this.farmer    = new Farmer({ x: 75, y: 75 });
     this.shop      = new Shop({ x: 0, y: 0 });
-    this.hud       = new Textbox("Health: 100   Fruits: 0",
+    this.shopDialog= new Textbox(new Array("Potion    3",
+                                           "Spray     4",
+                                           "Exit       "),
+                                 { x: 75, y: 75},
+                                 300,
+                                 120);
+
+    this.hud       = new Textbox(new Array("Health: 100   Fruits: 0"),
                                 { x: region.w / 2, y: 4},
                                  300,
                                  50);
@@ -47,8 +55,12 @@ Level.prototype.draw = function (context) {
     }
 
     // Draw HUD
-    this.hud.text = "Health: " + this.farmer.health + " Fruits: " + this.farmer.numFruits;
+    this.hud.text = new Array("Health: " + this.farmer.health + " Fruits: " + this.farmer.numFruits);
     this.hud.draw(context);
+
+    if (this.shopOpen) {
+        this.shopDialog.draw(context);
+    }
 
 };
 
@@ -56,6 +68,11 @@ Level.prototype.update = function (canvas) {
     var i, j, parentTree, parentTreeIsSwarmed, flock, cloud, tree;
 
     // Update trees/fruit
+    
+    if (this.shopOpen) {
+        return;
+    }
+
     for (i = this.trees.length - 1; i >= 0; --i) {
         // If tree died during update, remove it
         if (this.trees[i].update()) {
@@ -110,6 +127,7 @@ Level.prototype.update = function (canvas) {
 
     // Check for player-shop collision
     if (this.farmer.overlaps(this.shop)) {
+        this.shopOpen = true;
         // TODO: track cash for dropoffs?
         if (this.farmer.numFruits > 0) {
             console.log("cashing in " + this.farmer.numFruits + " fruits");

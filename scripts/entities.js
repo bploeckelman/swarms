@@ -340,8 +340,25 @@ GasCloud.prototype.toString = function () {
 // ----------------------------------------------------------------------------
 //     Farmer
 // ----------------------------------------------------------------------------
+
+var farmerImages = {
+     "up0"     :{ x:   0, y:   0, w:   48, h:  64}
+    ,"up1"     :{ x:  48, y:   0, w:   48, h:  64}
+    ,"up2"     :{ x:  72, y:   0, w:   48, h:  64}
+    ,"right0"  :{ x:   0, y:  64, w:   48, h:  64}
+    ,"right1"  :{ x:  48, y:  64, w:   48, h:  64}
+    ,"right2"  :{ x:  72, y:  64, w:   48, h:  64}
+    ,"down0"   :{ x:   0, y: 128, w:   48, h:  64}
+    ,"down1"   :{ x:  48, y: 128, w:   48, h:  64}
+    ,"down2"   :{ x:  72, y: 128, w:   48, h:  64}
+    ,"left0"   :{ x:   0, y: 192, w:   48, h:  64}
+    ,"left1"   :{ x:  48, y: 192, w:   48, h:  64}
+    ,"left2"   :{ x:  72, y: 192, w:   48, h:  64}
+};
+var farmerTypes = Object.keys(farmerImages);
+
 var Farmer = function (pos) {
-    Entity.call(this, "farmer", pos, images.farmer);
+    Entity.call(this, "farmer", pos, images.farmer12);
     this.health     = 100;
     this.sprayAmt   = 100;
     this.sprayCost  = 10;
@@ -350,6 +367,10 @@ var Farmer = function (pos) {
     this.minSpeed   = 1;
     this.numFruits  = 0;
     this.carryLimit = 20;
+    this.facing     = "down";
+    // TODO: sloppy
+    this.width      = 48;
+    this.height     = 64;
 };
 
 Farmer.prototype.damage = function (amount) {
@@ -369,21 +390,33 @@ Farmer.prototype.update = function (dir) {
     }
 
     if (keyState[68]) {
+        this.facing = "right";
         this.pos.x += this.speed;
     }
     if (keyState[65]) {
+        this.facing = "left";
         this.pos.x -= this.speed;
     }
     if (keyState[87]) {
+        this.facing = "up";
         this.pos.y -= this.speed;
     }
     if (keyState[83]) {
+        this.facing = "down";
         this.pos.y += this.speed;
     }
 };
 
 Farmer.prototype.draw = function (context) {
-    context.drawImage(this.image, this.pos.x, this.pos.y);
+    context.drawImage(this.image, 
+                      farmerImages[this.facing + "0"].x,
+                      farmerImages[this.facing + "0"].y,
+                      farmerImages[this.facing + "0"].w,
+                      farmerImages[this.facing + "0"].h,
+                      this.pos.x,
+                      this.pos.y,
+                      farmerImages[this.facing + "0"].w,
+                      farmerImages[this.facing + "0"].h);
     
     if (this.debug) {
         var center = this.center(),
