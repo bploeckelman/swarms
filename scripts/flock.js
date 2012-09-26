@@ -201,12 +201,14 @@ Flock.prototype.update = function (canvas) {
     }
 
     // Damage the flock's target
-    if (this.boids[0].type === "normal") {
-        this.target.damage(0.025);
-    } else if (this.boids[0].type === "biting") {
-        this.target.damage(0.05);
-    } else if (this.boids[0].type === "poison") {
-        this.target.damage(0.075);
+    if (this.target.overlaps(this)) {
+        if (this.boids[0].type === "normal") {
+            this.target.damage(0.025);
+        } else if (this.boids[0].type === "biting") {
+            this.target.damage(0.05);
+        } else if (this.boids[0].type === "poison") {
+            this.target.damage(0.075);
+        }
     }
 };
 
