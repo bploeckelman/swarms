@@ -45,7 +45,7 @@ var Pointer = function (selected, textbox, image) {
 };
 
 Pointer.prototype.draw = function (context) {
-    var strRep = String(Math.floor(this.current) % 3);
+    var strRep = String(Math.floor(this.current) % this.textbox.text.length);
     context.drawImage(this.image, 
                       pointerImages[strRep].x,
                       pointerImages[strRep].y,
@@ -72,7 +72,7 @@ Pointer.prototype.update = function () {
         }
     }
     if (keyState[83]) {
-        if (this.selected < 2) {
+        if (this.selected < this.textbox.text.length - 1) {
             if (this.timeBuffer == 2 ) {
                 this.selected += 1;
                 this.pos.y += 40;

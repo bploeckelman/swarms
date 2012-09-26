@@ -18,7 +18,7 @@ var Level = function (numTrees, region) {
     this.gameOver  = false;
     this.overText  = new Textbox(new Array("                    Game Over",
                                         "You have been killed by the swarm",
-                                        "       Play again?"),
+                                        "                     Play again?"),
                                 { x: region.x, y: region.y},
                                 420,
                                 150);
@@ -87,6 +87,7 @@ Level.prototype.update = function (canvas) {
     var i, j, parentTree, parentTreeIsSwarmed, flock, cloud, tree;
 
     if (this.gameOver) {
+        this.pointer.update();
         return;
     }
     
@@ -155,11 +156,11 @@ Level.prototype.update = function (canvas) {
             this.shopOpen = true;
             this.onShop = true;
             // TODO: track cash for dropoffs?
-            if (this.farmer.numFruits > 0) {
+            /*if (this.farmer.numFruits > 0) {
                 console.log("cashing in " + this.farmer.numFruits + " fruits");
                 this.shop.stockpile += this.farmer.numFruits;
                 this.farmer.numFruits = 0;
-            }
+            }*/
         }
     } else {
         this.onShop = false;
