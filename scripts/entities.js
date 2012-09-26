@@ -65,6 +65,7 @@ var Tree = function (type, pos) {
     this.fruits = [];
     this.canSwarm = true;
     this.buffer = document.createElement('canvas');
+    this.debug = false;
 };
 
 Tree.prototype.update = function () {
@@ -83,13 +84,19 @@ Tree.prototype.update = function () {
 };
 
 Tree.prototype.draw = function (context) {
-    // Create an offscreen buffer
-    var bufcontext;
+    var currentImageBounds = treeImages[this.type],
+        bufcontext;
+
+    // Keep the tree's width and height current with its type image
+    this.width  = currentImageBounds.w;
+    this.height = currentImageBounds.h;
+
+    // Set the offscreen buffer's size, and get its 2d context
     this.buffer.width  = this.image.width;
     this.buffer.height = this.image.height;
     bufcontext = this.buffer.getContext('2d');
 
-    // Fill buffer with tint color derived from health
+    // Fill buffer with tint color at 100% tinting
     bufcontext.fillStyle = '#ff0000';
     bufcontext.fillRect(0, 0, this.buffer.width, this.buffer.height);
 
@@ -99,32 +106,51 @@ Tree.prototype.draw = function (context) {
 
     // To tint the image, draw it first
     context.drawImage(
-              this.image       // source image
-            , treeImages[this.type].x  // source x
-            , treeImages[this.type].y  // source y
-            , treeImages[this.type].w  // source w
-            , treeImages[this.type].h  // source h
-            , this.pos.x               // dest x
-            , this.pos.y               // dest y
-            , treeImages[this.type].w  // dest w
-            , treeImages[this.type].h  // dest h
+          this.image       // source image
+        , currentImageBounds.x  // source x
+        , currentImageBounds.y  // source y
+        , currentImageBounds.w  // source w
+        , currentImageBounds.h  // source h
+        , this.pos.x               // dest x
+        , this.pos.y               // dest y
+        , currentImageBounds.w  // dest w
+        , currentImageBounds.h  // dest h
     );
 
     // Then set global alpha to tint amount, and draw it again
     context.globalAlpha = (this.maxHealth - this.health) / this.maxHealth;
     context.drawImage(
-              this.buffer       // source image
-            , treeImages[this.type].x  // source x
-            , treeImages[this.type].y  // source y
-            , treeImages[this.type].w  // source w
-            , treeImages[this.type].h  // source h
-            , this.pos.x               // dest x
-            , this.pos.y               // dest y
-            , treeImages[this.type].w  // dest w
-            , treeImages[this.type].h  // dest h
+          this.buffer       // source image
+        , currentImageBounds.x  // source x
+        , currentImageBounds.y  // source y
+        , currentImageBounds.w  // source w
+        , currentImageBounds.h  // source h
+        , this.pos.x               // dest x
+        , this.pos.y               // dest y
+        , currentImageBounds.w  // dest w
+        , currentImageBounds.h  // dest h
     );
     // Reset global alpha
     context.globalAlpha = 1.0;
+
+    // Draw debug stuff
+    if (this.debug === true) {
+        // Tree's center
+        context.fillStyle = "#ff0000";
+        context.beginPath();
+        context.arc(this.center().x, this.center().y, 3, 0, 2 * Math.PI);
+        context.closePath();
+        context.stroke();
+        context.fill();
+
+        // Tree's position
+        context.fillStyle = "#0000ff";
+        context.beginPath();
+        context.arc(this.pos.x, this.pos.y, 3, 0, 2 * Math.PI);
+        context.closePath();
+        context.stroke();
+        context.fill();
+    }
 };
 
 Tree.prototype.fruit = function () {
