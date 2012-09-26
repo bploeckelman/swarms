@@ -170,6 +170,9 @@ Tree.prototype.fruit = function () {
 
 Tree.prototype.damage = function (amount) {
     this.health -= amount;
+    if (this.health < 0.0) {
+        this.health = 0.0;
+    }
 }
 
 Tree.prototype.toString = function () {
@@ -348,6 +351,15 @@ var Farmer = function (pos) {
     this.numFruits  = 0;
     this.carryLimit = 20;
 };
+
+Farmer.prototype.damage = function (amount) {
+    this.health -= amount;
+    if (this.health < 0.0) {
+        this.health = 0.0;
+        // TODO: handle end of game properly
+        console.log("Game Over - You were killed by the swarm!");
+    }
+}
 
 Farmer.prototype.update = function (dir) {
     var carryingCapacityUsed = this.numFruits / this.carryLimit;
