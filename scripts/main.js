@@ -120,7 +120,7 @@ window.addEventListener('keyup', function(e) {
     }
 
     // ------------------------------------------------------------------
-    canvas.addEventListener("click", function (event) {
+    /*canvas.addEventListener("click", function (event) {
         var gascloud = level.farmer.handleClick({
             x: event.pageX - canvas.offsetLeft,
             y: event.pageY - canvas.offsetTop
@@ -128,7 +128,7 @@ window.addEventListener('keyup', function(e) {
         if (gascloud !== null) {
             level.gasclouds.push(gascloud);
         }
-    }, false);
+    }, false);*/
 
     // ------------------------------------------------------------------
     // ------------------------------------------------------------------

@@ -382,7 +382,7 @@ Farmer.prototype.damage = function (amount) {
         // TODO: handle end of game properly
         console.log("Game Over - You were killed by the swarm!");
     }
-}
+};
 
 Farmer.prototype.update = function (dir) {
     var carryingCapacityUsed = this.numFruits / this.carryLimit;
@@ -453,7 +453,7 @@ Farmer.prototype.spray = function (dir) {
     return new GasCloud(this.center(), dir);
 };
 
-Farmer.prototype.handleClick = function (clickPos) {
+/*Farmer.prototype.handleClick = function (clickPos) {
     if (this.sprayAmt <= 0) {
         return null;
     }
@@ -468,7 +468,7 @@ Farmer.prototype.handleClick = function (clickPos) {
     dir.y /= dist;
     
     return this.spray(dir);
-};
+};*/
 
 Farmer.prototype.toString = function () {
     return Entity.prototype.toString.call(this);

@@ -15,6 +15,14 @@ var Level = function (numTrees, region) {
     this.onShop    = false;
     this.farmer    = new Farmer({ x: 75, y: 75 });
     this.shop      = new Shop({ x: 0, y: 0 });
+    this.gameOver  = false;
+    this.overText  = new Textbox(new Array("                    Game Over",
+                                        "You have been killed by the swarm",
+                                        "       Play again?"),
+                                { x: region.x, y: region.y},
+                                420,
+                                150);
+
     this.shopDialog= new Textbox(new Array("Potion    3",
                                            "Spray     4",
                                            "Exit       "),
@@ -68,12 +76,19 @@ Level.prototype.draw = function (context) {
         this.pointer.draw(context);
     }
 
+    if (this.gameOver) {
+        this.overText.draw(context);
+        this.pointer.draw(context);
+    }
+
 };
 
 Level.prototype.update = function (canvas) {
     var i, j, parentTree, parentTreeIsSwarmed, flock, cloud, tree;
 
-    // Update trees/fruit
+    if (this.gameOver) {
+        return;
+    }
     
     if (this.shopOpen) {
         this.shopOpen = this.pointer.update();
@@ -187,6 +202,11 @@ Level.prototype.update = function (canvas) {
                 this.farmer.sprayAmt = 100;
             }
         }
+    }
+    //GameOver
+    if (this.farmer.health <= 0) {
+        this.gameOver = true;
+        this.pointer = new Pointer(0, this.overText, images.pointer);
     }
 };
 

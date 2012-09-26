@@ -42,7 +42,7 @@ var Pointer = function (selected, textbox, image) {
     this.pos = { x: this.textbox.pos.x + this.textbox.width - 32,
                  y: this.textbox.pos.y};
 
-}
+};
 
 Pointer.prototype.draw = function (context) {
     var strRep = String(Math.floor(this.current) % 3);
