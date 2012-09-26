@@ -11,6 +11,10 @@ var Level = function (numTrees, region) {
     this.gasclouds = [];
     this.farmer    = new Farmer({ x: 0, y: 0 });
     this.shop      = new Shop({ x: 0, y: 0 });
+    this.hud       = new Textbox("Health: 100   Fruits: 0",
+                                { x: region.w / 2, y: 4},
+                                 300,
+                                 50);
 };
 
 // ----- Level prototype methods ----------------------------------------------
@@ -41,6 +45,11 @@ Level.prototype.draw = function (context) {
     for (i = 0; i < this.gasclouds.length; ++i) {
         this.gasclouds[i].draw(context);
     }
+
+    // Draw HUD
+    this.hud.text = "Health: " + this.farmer.health + " Fruits: " + this.farmer.numFruits;
+    this.hud.draw(context);
+
 };
 
 Level.prototype.update = function (canvas) {
