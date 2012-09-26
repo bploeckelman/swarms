@@ -55,7 +55,7 @@ Level.prototype.draw = function (context) {
     }
 
     // Draw HUD
-    this.hud.text = new Array("Health: " + this.farmer.health + " Fruits: " + this.farmer.numFruits);
+    this.hud.text = new Array("Health: " + Math.ceil(this.farmer.health) + " Fruits: " + this.farmer.numFruits);
     this.hud.draw(context);
 
     if (this.shopOpen) {
@@ -123,8 +123,10 @@ Level.prototype.update = function (canvas) {
     }
     
     // Update the player
-    this.farmer.update();
-
+    // TODO: dirty way to not change too much code for keyboard clouds
+    var cloud = this.farmer.update();
+    if (cloud != null) { this.gasclouds.push(cloud); }
+    
     // Check for player-shop collision
     if (this.farmer.overlaps(this.shop)) {
         this.shopOpen = true;

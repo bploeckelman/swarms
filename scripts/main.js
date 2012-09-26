@@ -37,7 +37,8 @@ images.fruits.src      = "images/pacman-fruit.png";
 images.apple_good.src  = "images/apple-good.png";
 images.apple_ok.src    = "images/apple-dropped.png";
 images.apple_bad.src   = "images/apple-rotten.png";
-images.farmer12.src    = "images/farmer12.png"
+images.farmer12.src    = "images/farmer12.png";
+
 var keyState = {};
 window.addEventListener('keydown', function(e) {
     keyState[e.keycode || e.which] = true;

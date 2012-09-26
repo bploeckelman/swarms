@@ -283,8 +283,10 @@ GasCloud.prototype.update = function () {
     //       not elapsed num frames
     if (++this.age < this.maxAge) {
         // Update position
-        this.pos.x += this.dir.x * this.speed;
-        this.pos.y += this.dir.y * this.speed;
+        if (this.dir == "right") { this.pos.x += this.speed; }
+        if (this.dir == "left")  { this.pos.x -= this.speed; }
+        if (this.dir == "up")    { this.pos.y -= this.speed; }
+        if (this.dir == "down")  { this.pos.y += this.speed; }
         
         // Update size
         this.width  += this.expand;
@@ -361,7 +363,7 @@ var Farmer = function (pos) {
     Entity.call(this, "farmer", pos, images.farmer12);
     this.health     = 100;
     this.sprayAmt   = 100;
-    this.sprayCost  = 10;
+    this.sprayCost  = 1;
     this.topSpeed   = 4;
     this.speed      = 4;
     this.minSpeed   = 1;
@@ -388,7 +390,6 @@ Farmer.prototype.update = function (dir) {
     if (this.speed < this.minSpeed) {
         this.speed = this.minSpeed;
     }
-
     if (keyState[68]) {
         this.facing = "right";
         this.pos.x += this.speed;
@@ -404,6 +405,13 @@ Farmer.prototype.update = function (dir) {
     if (keyState[83]) {
         this.facing = "down";
         this.pos.y += this.speed;
+    }
+    if (keyState[13]) {
+        if (this.sprayAmt <= 0) {
+            return null;
+        }
+        return this.spray(this.facing);
+
     }
 };
 
