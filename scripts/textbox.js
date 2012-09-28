@@ -103,9 +103,9 @@ Menubox.prototype.update = function (farmer) {
         return false;
     }
     
-    if (keyState[87]) {
+    if (keyState[87] || keyState[38]) {
         if (this.selected > 0) {
-            if (this.timeBuffer == -2) {
+            if (this.timeBuffer == -3) {
                 this.selected -= 1;
                 this.pointerPos.y -= this.fontSize;
                 this.timeBuffer = 0;
@@ -114,9 +114,9 @@ Menubox.prototype.update = function (farmer) {
             }
         }
     }
-    if (keyState[83]) {
+    if (keyState[83] || keyState[40]) {
         if (this.selected < Object.keys(this.choices).length - 1) {
-            if (this.timeBuffer == 2) {
+            if (this.timeBuffer == 3) {
                 this.selected += 1;
                 this.pointerPos.y += this.fontSize;
                 this.timeBuffer = 0;

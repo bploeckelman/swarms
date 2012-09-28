@@ -9,7 +9,6 @@
 
 var Level = function (numTrees, region) {
     this.trees     = growTrees(numTrees, region);
-    this.firstTime = true;
     this.flocks    = [];
     this.gasclouds = [];
     this.shopOpen  = false;
