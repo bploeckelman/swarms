@@ -1,53 +1,33 @@
 // ----------------------------------------------------------------------------
 //     Textbox
 // ----------------------------------------------------------------------------
-var Textbox = function (text, pos, width, height) {
-    this.pos    = pos;
-    this.width  = width;
-    this.height = height;
-    this.text   = text;
+var Textbox = function (text, pos) {
+    this.pos    = pos
+    this.textPos = {x:0, y:0};
+    this.width  = 0;
+    this.height = 27 * text.length;
     this.fontSize = 23;
+    this.text = text;
 };
 
 Textbox.prototype.draw = function (context) {
     context.font = this.fontSize + "px Verdana";
     context.fillStyle = "black";
     if (this.width == 0) { 
-        this.width = Math.max.apply(Math, ([context.measureText(x).width for each (x in this.choices)])) + 50;
+        this.width = Math.max.apply(Math, ([context.measureText(x).width for each (x in this.text)]))*1.2;
         this.textPos = {
-                x: this.pos.x + this.width,
-                y: this.pos.y + this.fontSize
-        };
-        this.pointerPos = {x:this.pos.x + this.width,
-                           y: this.pos.y
+                x: this.pos.x + 25,
+                y: this.pos.y + this.fontSize + 3
         };
     }
-
-
 
     // Draw text box
     context.drawImage(images.textbox, this.pos.x, this.pos.y, this.width, this.height);
 
-    // Draw choices
-    for (var i = 0; i < this.choices.length; ++i) {
-        context.fillText(this.choices[i], this.textPos.x, this.textPos.y + (i * this.fontSize));
+    // Draw text
+    for (var i = 0; i < this.text.length; ++i) {
+        context.fillText(this.text[i], this.textPos.x, this.textPos.y + (i * this.fontSize));
     }
-    // Draw prices
-    var costs = [k["cost"] for each(k in this.choices) if ("cost" in k)];
-    for (var i = 0; i < costs.length; ++i) {
-        context.fillText(this.costs[i], this.textPos.x + (this.width - this.textPos.x), this.textPos.y + (i * this.fontSize));
-    }
-    // Draw pointer
-    var strRep = String(Math.floor(this.current) % Object.keys(this.choices).length);
-    context.drawImage(images.pointer, 
-                      pointerImages[strRep].x,
-                      pointerImages[strRep].y,
-                      pointerImages[strRep].w,
-                      pointerImages[strRep].h,
-                      this.pointerPos.x,
-                      this.pointerPos.y,
-                      pointerImages[strRep].w,
-                      pointerImages[strRep].h);
 };
 
 
@@ -66,7 +46,7 @@ var Menubox = function (choices, pos) {
     this.pos    = pos
     this.textPos = {x:0, y:0};
     this.width  = 0;
-    this.height = 25 * Object.keys(choices).length;
+    this.height = 30 * Object.keys(choices).length;
     this.choices   = choices;
     this.selected = 0;
     this.current = 0;
@@ -83,10 +63,10 @@ Menubox.prototype.draw = function (context) {
         this.width = Math.max.apply(Math, ([context.measureText(x).width for each (x in Object.keys(this.choices))])) + 150;
         this.textPos = {
                 x: this.pos.x + 25,
-                y: this.pos.y + this.fontSize + 3
+                y: this.pos.y + this.fontSize + 20
         };
         this.pointerPos = {x:this.pos.x + this.width - 50,
-                           y: this.pos.y
+                           y: this.pos.y + 20
         };
     }
 
@@ -150,7 +130,6 @@ Menubox.prototype.update = function (farmer) {
         else if(farmer.cash >= cost) {
             farmer.cash -= cost;
             this.choices[Object.keys(this.choices)[this.selected]]["func"](farmer);
-    
         }
     }
     this.keyDown = keyState[13];

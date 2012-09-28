@@ -3,9 +3,9 @@
 //     Boid
 // ----------------------------------------------------------------------------
 var boidImages = {
-    "normal" : images.boid_yellow,
-    "biting" : images.boid_orange,
-    "poison" : images.boid_red
+    "normal" : images.bee_yellow,
+    "biting" : images.bee_blue,
+    "poison" : images.bee_red
 };
 var boidTypes = Object.keys(boidImages);
 
@@ -18,14 +18,14 @@ var Boid = function (type, initialPos, initialVel, maxSpeed) {
 };
 
 Boid.prototype.draw = function (context) {
-    context.drawImage(this.image, this.pos.x, this.pos.y);
+    context.drawImage(this.image, this.pos.x, this.pos.y, this.image.width*.5, this.image.height*.5);
 
-    context.strokeStyle = "rgb(0,0,0)";
+    /*context.strokeStyle = "rgb(0,0,0)";
     context.beginPath();
     context.moveTo(this.pos.x + 8, this.pos.y + 8);
     context.lineTo(this.pos.x + 8 + 8 * this.vel.x, this.pos.y + 8 + 8 * this.vel.y);
     context.closePath();
-    context.stroke();
+    context.stroke();*/
 }
 
 Boid.prototype.move = function (canvas) {
@@ -208,6 +208,7 @@ Flock.prototype.update = function (canvas) {
             this.target.damage(0.05);
         } else if (this.boids[0].type === "poison") {
             this.target.damage(0.075);
+            this.target.isPoisoned = true;
         }
     }
 };

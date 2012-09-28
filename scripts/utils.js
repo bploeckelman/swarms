@@ -15,7 +15,10 @@ var images = {
         "apple_ok"   : new Image(),
         "apple_bad"  : new Image(),
         "farmer12"   : new Image(),
-        "pointer"    : new Image()
+        "pointer"    : new Image(),
+        "bee_yellow" : new Image(),
+        "bee_blue"   : new Image(),
+        "bee_red"    : new Image()
 };
 images.grass.src       = "images/grass.png";
 images.bubble.src      = "images/bubble.png";
@@ -34,6 +37,9 @@ images.apple_ok.src    = "images/apple-dropped.png";
 images.apple_bad.src   = "images/apple-rotten.png";
 images.farmer12.src    = "images/farmer12.png";
 images.pointer.src     = "images/pointer.png";
+images.bee_yellow.src  = "images/bee-yellow.png";
+images.bee_blue.src    = "images/bee-blue.png";
+images.bee_red.src     = "images/bee-red.png";
 
 // ----------------------------------------------------------------------------
 //     HUD Utils

@@ -34,8 +34,13 @@ var Level = function (numTrees, region) {
                                                                     }
                                                                }
                                             ,"cost":"4"}
+                                 ,"Spray Recharge Increase" :{"func":function(x) {x.sprayRegen *= 2;
+                                                                    }
+                                            ,"cost":"8"}
                                  ,"Spray Increase" :{"func":function(x) {x.maxSpray += 25;}
                                             ,"cost":"8"}
+                                 ,"Antidote" :{"func":function(x) {x.isPoisoned = false;}
+                                            ,"cost":"6"}
                                  ,"Speed Boost" :{"func":function(x) {x.topSpeed *= 2;
                                                                       x.minSpeed *= 2;}
                                             ,"cost":"10"}
@@ -45,10 +50,6 @@ var Level = function (numTrees, region) {
                                            }
                                  },
                                  { x: 75, y: 75});
-    this.hud       = new Textbox(null,
-                                { x: region.w / 2, y: 4},
-                                 400,
-                                 50);
 
     this.iconbox   = new Iconbox(
         [images.apple_ok, images.gold, images.bubble], // icon images
@@ -106,6 +107,11 @@ Level.prototype.draw = function (context) {
 
     // Draw game over overlay
     if (this.gameOver) {
+        /*var over = new Textbox(new Array("                    Game over!",
+                                         "You were defeated by the swarm"),
+                                { x: (this.canvas.width  / 2) - (this.canvas.width  / 3.5),
+                                  y: (this.canvas.height / 2) - (this.canvas.height / 6)});
+        over.draw(context)*/
         // TODO: move all this sort of thing into updated textbox object
         context.font = "50px Verdana";
         var overlay = {
@@ -197,8 +203,16 @@ Level.prototype.update = function (canvas) {
     for (i = 0; i < this.flocks.length; ++i) {
         this.flocks[i].update(canvas);
         if (this.flocks[i].target.health === 0.0) {
-            this.flocks[i].target = this.farmer;
-        }
+            if (this.flocks[i].boids[0].type === "biting" || this.flocks[i].boids[0].type === "poison"){
+                this.flocks[i].target = this.farmer;
+            } else {
+                if (this.trees.length > 0) {
+                    this.flocks[i].target = this.trees[Math.floor(Math.random()*this.trees.length - 0.1)];
+                }else {
+                    this.flocks[i].target = this.farmer;
+                }
+            }
+        }   
     }
     
     // Update the player
@@ -206,6 +220,9 @@ Level.prototype.update = function (canvas) {
     var cloud = this.farmer.update();
     if (cloud != null) { this.gasclouds.push(cloud); }
     
+    // Is poisioned?
+    if (this.farmer.isPoisoned) { this.farmer.damage(.05);}
+
     // Check for player-shop collision
     if (this.farmer.overlaps(this.shop)) {
         if (!this.onShop) {
@@ -259,19 +276,19 @@ Level.prototype.update = function (canvas) {
     }i
    
     // Regain spray very slowly
-    this.farmer.sprayAmt += this.farmer.sprayCost * 0.1;
+    this.farmer.sprayAmt += this.farmer.sprayCost * this.farmer.sprayRegen;
     if (this.farmer.sprayAmt > this.farmer.maxSpray) {
         this.farmer.sprayAmt = this.farmer.maxSpray;
     }
     //GameOver
-    if (this.farmer.health <= 0) {
+    if (this.farmer.health <= 0 || this.trees.length == 0) {
         this.gameOver = true;
         //this.pointer = new Pointer(0, this.overText, images.pointer);
     }
 };
 
 
-// ----- Helper functions -----------------------------------------------------
+// ----- Helper functions ------------------------------s----------------------
 // growTrees() - split the region into a grid with 100x100 pixel cells,
 //               then randomly pick unoccupied cells to put new trees in
 function growTrees (numTrees, region) {
