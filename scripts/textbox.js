@@ -24,6 +24,44 @@ Textbox.prototype.draw = function (context) {
 };
 
 // ----------------------------------------------------------------------------
+//     Icon Box
+// ----------------------------------------------------------------------------
+var Iconbox = function (icons, amounts) {
+    this.icons = icons;
+    this.amounts = amounts;
+    this.pos  = { x: 0, y: 0 };
+    this.size = { w: 0, h: 32 }; // Note: icons size 32x32
+};
+
+Iconbox.prototype.draw = function (context) {
+    var offset = 0, text, i;
+
+    // Recalculate size
+    this.size.w = 0;
+    for (i = 0; i < this.icons.length; ++i) {
+        this.size.w += 32;
+    }
+    for (i = 0; i < this.amounts.length; ++i) {
+        this.size.w += context.measureText(" " + this.amounts[i] + " ").width;
+    }
+    this.pos.x = 800 - this.size.w;
+    this.pos.y = 0;
+
+    // Draw the icons + amounts at the appropriate locations
+    context.font = "20px Verdana";
+    context.fillStyle = "white";
+    for (i = 0; i < this.amounts.length; ++i) {
+        context.drawImage(this.icons[i], this.pos.x + offset, this.pos.y, 32, 32);
+        offset += 32;
+
+        text = " " + this.amounts[i] + " ";
+        context.fillText(text, this.pos.x + offset, this.pos.y + 25);
+        offset += context.measureText(text).width;
+    };
+};
+
+
+// ----------------------------------------------------------------------------
 //     Pointer
 // ----------------------------------------------------------------------------
 

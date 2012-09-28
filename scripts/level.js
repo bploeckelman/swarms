@@ -34,6 +34,11 @@ var Level = function (numTrees, region) {
                                 { x: region.w / 2, y: 4},
                                  400,
                                  50);
+
+    this.iconbox   = new Iconbox(
+        [images.apple_ok, images.gold, images.bubble], // icon images
+        [0, 0, this.farmer.sprayAmt] // initial item amounts
+    );
 };
 
 // ----- Level prototype methods ----------------------------------------------
@@ -66,16 +71,26 @@ Level.prototype.draw = function (context) {
     }
 
     // Draw HUD
+    /*
     this.hud.text = new Array("Health: " + Math.ceil(this.farmer.health) + 
                               " Fruits: " + this.farmer.numFruits + 
                               " Spray: " + this.farmer.sprayAmt);
     this.hud.draw(context);
+    */
+    // HACK HACK HACK - keep amounts up to date
+    this.iconbox.amounts[0] = this.farmer.numFruits;
+    this.iconbox.amounts[1] = 0; // TODO: handle  money
+    this.iconbox.amounts[2] = this.farmer.sprayAmt;
 
+    this.iconbox.draw(context);
+
+    // Draw Shop dialog
     if (this.shopOpen && this.onShop) {
         this.shopDialog.draw(context);
         this.pointer.draw(context);
     }
 
+    // Draw game over overlay
     if (this.gameOver) {
         // TODO: move all this sort of thing into updated textbox object
         context.font = "50px Verdana";
@@ -160,8 +175,6 @@ Level.prototype.update = function (canvas) {
                 this.trees[i].fruits[j].dropped) {
                 this.trees[i].fruits[j].remove();
                 ++this.farmer.numFruits;
-                // TODO: make a hud and display this onscreen
-                console.log("carrying " + this.farmer.numFruits + " fruits");
             }
         }
     }
