@@ -60,7 +60,11 @@ var Healthbar = function (parent, size, offset, colors) {
             
         // Draw inner health bar
         context.globalAlpha = 0.5;
-        context.fillStyle = this.colors.fill;
+        if (this.parent.isPoisoned) {
+            context.fillStyle = "green";
+        } else { 
+            context.fillStyle = this.colors.fill;
+        }
         context.fillRect(pos.x + offset.x, pos.y + offset.y, healthPercent * size.w, size.h);
         context.globalAlpha = 1.0;
             
