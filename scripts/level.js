@@ -16,15 +16,34 @@ var Level = function (numTrees, region) {
     this.farmer    = new Farmer({ x: 75, y: 75 });
     this.shop      = new Shop({ x: 0, y: 0 });
     this.gameOver  = false;
-    this.overText  = new Textbox(new Array("                    Game Over",
-                                        "You have been killed by the swarm",
-                                        "                     Play again?"),
-                                { x: region.x, y: region.y},
-                                420,
-                                150);
-
-    this.shopDialog= new Menubox(new Array("Potion","Spray","Exit"),
-                                 new Array("3", "4"),
+    this.shopDialog= new Menubox({"Potion":{"func":function(x) {x.health += 30;
+                                                                    if(x.health > x.maxHealth){
+                                                                        x.health = x.maxHealth;
+                                                                    }
+                                                                }   
+                                            ,"cost":"3"}
+                                 ,"Health Increase" :{"func":function(x) {x.maxHealth += 25;
+                                                                          x.healthBar.maxHealth += 25;
+                                                                          x.healthBar.size.w += 25;
+                                                                          x.healthBar.offset.x -= 12.5;
+                                                                         }
+                                            ,"cost":"7"}
+                                 ,"Spray" :{"func":function(x) {x.sprayAmt += 50;
+                                                                    if(x.sprayAmt > x.maxSpray){
+                                                                        x.sprayAmt = x.maxSpray;
+                                                                    }
+                                                               }
+                                            ,"cost":"4"}
+                                 ,"Spray Increase" :{"func":function(x) {x.maxSpray += 25;}
+                                            ,"cost":"8"}
+                                 ,"Speed Boost" :{"func":function(x) {x.topSpeed *= 2;
+                                                                      x.minSpeed *= 2;}
+                                            ,"cost":"10"}
+                                 ,"Exit"  :{"func":function(x){
+                                                     return false;
+                                                  }
+                                           }
+                                 },
                                  { x: 75, y: 75});
     this.hud       = new Textbox(null,
                                 { x: region.w / 2, y: 4},
@@ -76,7 +95,7 @@ Level.prototype.draw = function (context) {
     // HACK HACK HACK - keep amounts up to date
     this.iconbox.amounts[0] = this.farmer.numFruits;
     this.iconbox.amounts[1] = this.farmer.cash;
-    this.iconbox.amounts[2] = this.farmer.sprayAmt;
+    this.iconbox.amounts[2] = Math.floor(this.farmer.sprayAmt);
 
     this.iconbox.draw(context);
 
@@ -126,12 +145,12 @@ Level.prototype.update = function (canvas) {
     this.canvas = canvas;
 
     if (this.gameOver) {
-        this.pointer.update();
+        //this.pointer.update();
         return;
     }
     
     if (this.shopOpen) {
-        this.shopOpen = this.shopDialog.update();
+        this.shopOpen = this.shopDialog.update(this.farmer);
         return;
     }
 
@@ -235,16 +254,19 @@ Level.prototype.update = function (canvas) {
             
             // Add more spray
             // TODO: only add spray at the store?  have to pay for it?
-            this.farmer.sprayAmt += this.farmer.sprayCost;
-            if (this.farmer.sprayAmt > 100) {
-                this.farmer.sprayAmt = 100;
-            }
+
         }
+    }i
+   
+    // Regain spray very slowly
+    this.farmer.sprayAmt += this.farmer.sprayCost * 0.1;
+    if (this.farmer.sprayAmt > this.farmer.maxSpray) {
+        this.farmer.sprayAmt = this.farmer.maxSpray;
     }
     //GameOver
     if (this.farmer.health <= 0) {
         this.gameOver = true;
-        this.pointer = new Pointer(0, this.overText, images.pointer);
+        //this.pointer = new Pointer(0, this.overText, images.pointer);
     }
 };
 

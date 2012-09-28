@@ -366,14 +366,16 @@ var farmerTypes = Object.keys(farmerImages);
 var Farmer = function (pos) {
     Entity.call(this, "farmer", pos, images.farmer12);
     this.health     = 100;
+    this.maxHealth  = 100;
     this.sprayAmt   = 100;
+    this.maxSpray   = 100;
     this.sprayCost  = 2;
     this.topSpeed   = 4;
     this.speed      = 4;
     this.minSpeed   = 1;
     this.numFruits  = 0;
     this.carryLimit = 20;
-    this.cash       = 0;
+    this.cash       = 20;
     this.healthBar  = new Healthbar(
         this, // parent
         { w: images.farmer12.width / 3, h: 10 }, // size
@@ -476,8 +478,9 @@ Farmer.prototype.spray = function (dir) {
     this.sprayAmt -= this.sprayCost;
     if (this.sprayAmt < 0) {
         this.sprayAmt = 0;
+    }else {
+        return new GasCloud(this.center(), dir);
     }
-    return new GasCloud(this.center(), dir);
 };
 
 Farmer.prototype.handleClick = function (clickPos) {

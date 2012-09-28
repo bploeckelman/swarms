@@ -40,7 +40,7 @@ images.pointer.src     = "images/pointer.png";
 // ----------------------------------------------------------------------------
 var Healthbar = function (parent, size, offset, colors) {
     this.parent = parent;
-    this.maxHealth = parent.health;
+    this.maxHealth = parent.maxHealth;
     this.size = size;
     this.offset = offset;
     this.line = 2;  // border line width
