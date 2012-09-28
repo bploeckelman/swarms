@@ -18,7 +18,8 @@ var images = {
         "pointer"    : new Image(),
         "bee_yellow" : new Image(),
         "bee_blue"   : new Image(),
-        "bee_red"    : new Image()
+        "bee_red"    : new Image(),
+        "speedup"    : new Image()
 };
 images.grass.src       = "images/grass.png";
 images.bubble.src      = "images/bubble.png";
@@ -40,6 +41,7 @@ images.pointer.src     = "images/pointer.png";
 images.bee_yellow.src  = "images/bee-yellow.png";
 images.bee_blue.src    = "images/bee-blue.png";
 images.bee_red.src     = "images/bee-red.png";
+images.speedup.src     = "images/speedup.png";
 
 // ----------------------------------------------------------------------------
 //     HUD Utils

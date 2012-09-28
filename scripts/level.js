@@ -45,7 +45,13 @@ var Level = function (numTrees, region) {
                                                                   }
                                             ,"cost":"6"}
                                  ,"Speed Boost" :{"func":function(x) {x.topSpeed *= 2;
-                                                                      x.minSpeed *= 2;}
+                                                                      x.minSpeed *= 2;
+                                                                      x.speedup = true;
+                                                                      setTimeout(function () {
+                                                                        x.topSpeed /= 2;
+                                                                        x.minSpeed /= 2;
+                                                                        x.speedup = false;
+                                                                      }, 6000);}
                                             ,"cost":"10"}
                                  ,"Exit"  :{"func":function(x){
                                                      return false;
@@ -92,12 +98,6 @@ Level.prototype.draw = function (context) {
     }
 
     // Draw HUD
-    /*
-    this.hud.text = new Array("Health: " + Math.ceil(this.farmer.health) + 
-                              " Fruits: " + this.farmer.numFruits + 
-                              " Spray: " + this.farmer.sprayAmt);
-    this.hud.draw(context);
-    */
     // HACK HACK HACK - keep amounts up to date
     this.iconbox.amounts[0] = this.farmer.numFruits;
     this.iconbox.amounts[1] = this.farmer.cash;
@@ -112,11 +112,6 @@ Level.prototype.draw = function (context) {
 
     // Draw game over overlay
     if (this.gameOver) {
-        /*var over = new Textbox(new Array("                    Game over!",
-                                         "You were defeated by the swarm"),
-                                { x: (this.canvas.width  / 2) - (this.canvas.width  / 3.5),
-                                  y: (this.canvas.height / 2) - (this.canvas.height / 6)});
-        over.draw(context)*/
         // TODO: move all this sort of thing into updated textbox object
         context.font = "50px Verdana";
         var overlay = {

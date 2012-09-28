@@ -386,6 +386,7 @@ var Farmer = function (pos) {
     );
     this.facing     = "down";
     this.prevFacing = 0;
+    this.speedup    = false;
     // TODO: sloppy
     this.width      = 48;
     this.height     = 64;
@@ -457,6 +458,14 @@ Farmer.prototype.draw = function (context) {
                       farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].w,
                       farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].h);
 
+    if (this.speedup) {
+        context.drawImage(images.speedup,
+            this.pos.x, this.pos.y, 
+            farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].w,
+            farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].h
+        );
+    }
+                      
     this.healthBar.draw(context);
 
     if (this.debug) {

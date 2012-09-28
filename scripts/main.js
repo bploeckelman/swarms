@@ -133,7 +133,7 @@ window.addEventListener('keyup', function(e) {
             context.fillText("Collect red fruit and exchange it for items", overlay.x + 30, overlay.y + 230);
             context.fillText("Watch out for the swarms, some are even poisonous", overlay.x + 20, overlay.y + 260);
             context.fillText("Your game is over when you die or all your trees die", overlay.x + 20, overlay.y + 290);
-
+            context.fillText("[ Press ENTER to begin! ]", textPos.x, overlay.y + 340);
     };
 
     (function drawLoop() {
