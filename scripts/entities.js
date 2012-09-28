@@ -363,7 +363,7 @@ var farmerImages = {
 };
 var farmerTypes = Object.keys(farmerImages);
 
-var Farmer = function (pos, trees) {
+var Farmer = function (pos, trees, grid) {
     Entity.call(this, "farmer", pos, images.farmer12);
     this.health     = 100;
     this.maxHealth  = 100;
@@ -378,6 +378,7 @@ var Farmer = function (pos, trees) {
     this.numFruits  = 0;
     this.carryLimit = 20;
     this.cash       = 0;
+    this.grid       = grid;
     this.trees      = trees;
     this.healthBar  = new Healthbar(
         this, // parent

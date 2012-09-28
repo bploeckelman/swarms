@@ -8,12 +8,24 @@
 
 
 var Level = function (numTrees, region) {
-    this.trees     = growTrees(numTrees, region);
+    this.grid      = [];
+    // Setup the grid array
+    var cellsize = { w: 100, h: 100 };
+    for (i = 0; i < (region.w / cellsize.w); ++i) {
+        this.grid[i] = [];
+        for (j = 0; j < (region.h / cellsize.h); ++j) {
+            this.grid[i][j] = { occupied: false };
+        }
+    }
+
+    // Set aside grid[0][0] for store
+    this.grid[0][0].occupied = true;
+    this.trees     = growTrees(numTrees, region, this.grid);
     this.flocks    = [];
     this.gasclouds = [];
     this.shopOpen  = false;
     this.onShop    = false;
-    this.farmer    = new Farmer({ x: 75, y: 75 }, this.trees);
+    this.farmer    = new Farmer({ x: 75, y: 75 }, this.trees, this.grid);
     this.shop      = new Shop({ x: 0, y: 0 });
     this.gameOver  = false;
     this.shopDialog= new Menubox({"Potion":{"func":function(x) {x.health += 30;
@@ -61,6 +73,10 @@ var Level = function (numTrees, region) {
                                         }
                                     }
                                     tree.health = 100;}, "cost":"20"}
+                                 ,"Plant a Tree" :{"func":function(x) {
+                                                            x.trees.push(growTrees(1, region, x.grid)[0]);
+                                                        }
+                                            ,"cost":"50"}
                                  ,"Exit"  :{"func":function(x){
                                                      return false;
                                                   }
@@ -301,8 +317,8 @@ Level.prototype.update = function (canvas) {
 // ----- Helper functions ------------------------------s----------------------
 // growTrees() - split the region into a grid with 100x100 pixel cells,
 //               then randomly pick unoccupied cells to put new trees in
-function growTrees (numTrees, region) {
-    var grid = [], cellsize = { w: 100, h: 100 },
+function growTrees (numTrees, region, grid) {
+    var cellsize = { w: 100, h: 100 },
         trees = [],
         pos, type,
         i, j;
@@ -313,16 +329,7 @@ function growTrees (numTrees, region) {
         return trees;
     }
 
-    // Setup the grid array
-    for (i = 0; i < (region.w / cellsize.w); ++i) {
-        grid[i] = [];
-        for (j = 0; j < (region.h / cellsize.h); ++j) {
-            grid[i][j] = { occupied: false };
-        }
-    }
 
-    // Set aside grid[0][0] for store
-    grid[0][0].occupied = true;
 
     // Randomly place trees into unoccupied cells
     while (numTrees > 0) {
