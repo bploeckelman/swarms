@@ -377,7 +377,7 @@ var Farmer = function (pos) {
     this.minSpeed   = 1;
     this.numFruits  = 0;
     this.carryLimit = 20;
-    this.cash       = 20;
+    this.cash       = 0;
     this.healthBar  = new Healthbar(
         this, // parent
         { w: images.farmer12.width / 3, h: 10 }, // size
