@@ -23,13 +23,9 @@ var Level = function (numTrees, region) {
                                 420,
                                 150);
 
-    this.shopDialog= new Textbox(new Array("Potion    3",
-                                           "Spray     4",
-                                           "Exit       "),
-                                 { x: 75, y: 75},
-                                 200,
-                                 120);
-    this.pointer   = new Pointer(0, this.shopDialog, images.pointer);
+    this.shopDialog= new Menubox(new Array("Potion","Spray","Exit"),
+                                 new Array("3", "4"),
+                                 { x: 75, y: 75});
     this.hud       = new Textbox(null,
                                 { x: region.w / 2, y: 4},
                                  400,
@@ -87,7 +83,6 @@ Level.prototype.draw = function (context) {
     // Draw Shop dialog
     if (this.shopOpen && this.onShop) {
         this.shopDialog.draw(context);
-        this.pointer.draw(context);
     }
 
     // Draw game over overlay
@@ -136,7 +131,7 @@ Level.prototype.update = function (canvas) {
     }
     
     if (this.shopOpen) {
-        this.shopOpen = this.pointer.update();
+        this.shopOpen = this.shopDialog.update();
         return;
     }
 
