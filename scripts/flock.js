@@ -178,6 +178,10 @@ Flock.prototype.update = function (canvas) {
         },
         // Steer towards the flock's target
         "target" : function (boid, boids, flock) {
+            // TODO: sometimes flock target gets undefined, fix this properly
+            if (flock.target === undefined) {
+                return { x: 0, y: 0}; 
+            }
             var center = flock.target.center(),
                 orientation = {
                     x: (center.x - boid.pos.x) / 100,

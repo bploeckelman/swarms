@@ -201,9 +201,12 @@ Level.prototype.update = function (canvas) {
             
             // Check each dropped fruit for collision with the player        
             if (this.farmer.overlaps(this.trees[i].fruits[j]) &&
-                this.trees[i].fruits[j].dropped) {
+                (this.trees[i].fruits[j].dropped || this.trees[i].fruits[j].rotten)) {
+                // Only add non-rotten fruits to player inventory
+                if (this.trees[i].fruits[j].dropped) {
+                    ++this.farmer.numFruits;
+                }
                 this.trees[i].fruits[j].remove();
-                ++this.farmer.numFruits;
             }
         }
     }
