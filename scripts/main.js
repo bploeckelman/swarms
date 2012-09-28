@@ -93,49 +93,47 @@ window.addEventListener('keyup', function(e) {
     }, true);
 
     // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-    // ------------------------------------------------------------------
-    
-    
     function howTo() {
-            if (keyState[13]) { firstTime = false;}
-            // How to play
-            context.font = "50px Verdana";
-            var overlay = {
-                    x: (canvas.width  / 2) - (canvas.width  / 2.5),
-                    y: (canvas.height / 2) - (canvas.height / 4),
-                    w: canvas.width  / 1.2,
-                    h: canvas.height / 1.5
-                },
-                text = "How to play",
-                textSize = context.measureText(text),
-                textPos = {
-                    x: overlay.x + (overlay.w / 2) - (textSize.width / 2),
-                    y: overlay.y + 80
-                },
-                gradient = context.createLinearGradient(0, 0, canvas.width, 0);
+        if (keyState[13]) { firstTime = false;}
+        // How to play
+        context.font = "50px Verdana";
+        var overlay = {
+                x: (canvas.width  / 2) - (canvas.width  / 2.5),
+                y: (canvas.height / 2) - (canvas.height / 4),
+                w: canvas.width  / 1.2,
+                h: canvas.height / 1.5
+            },
+            text = "How to play",
+            textSize = context.measureText(text),
+            textPos = {
+                x: overlay.x + (overlay.w / 2) - (textSize.width / 2),
+                y: overlay.y + 80
+            },
+            gradient = context.createLinearGradient(0, 0, canvas.width, 0);
 
-            // Draw text box
-            context.drawImage(images.textbox, overlay.x, overlay.y, overlay.w, overlay.h);
+        // Draw text box
+        context.drawImage(images.textbox, overlay.x, overlay.y, overlay.w, overlay.h);
 
-            // Draw "game over" text
-            gradient.addColorStop("0.1", "black");
-            gradient.addColorStop("1.0", "red");
-            context.fillStyle = gradient;
-            context.fillText(text, textPos.x, textPos.y);
+        // Draw "game over" text
+        gradient.addColorStop("0.1", "black");
+        gradient.addColorStop("1.0", "red");
+        context.fillStyle = gradient;
+        context.fillText(text, textPos.x, textPos.y);
 
-            // Draw other text
-            context.font = "23px Verdana";
-            context.fillStyle = "black";
-            context.fillText("Use the arrow keys or WASD to move around", overlay.x + 30, overlay.y + 140);
-            context.fillText("Use space or the mouse to spray pesticide", overlay.x + 30, overlay.y + 170);
-            context.fillText("Use enter to confirm a purchase", overlay.x + 30, overlay.y + 200);
-            context.fillText("Collect red fruit and exchange it for items", overlay.x + 30, overlay.y + 230);
-            context.fillText("Watch out for the swarms, some are even poisonous", overlay.x + 20, overlay.y + 260);
-            context.fillText("Your game is over when you die or all your trees die", overlay.x + 20, overlay.y + 290);
-            context.fillText("[ Press ENTER to begin! ]", textPos.x, overlay.y + 340);
+        // Draw other text
+        context.font = "23px Verdana";
+        context.fillStyle = "black";
+        context.fillText("Use the arrow keys or WASD to move around", overlay.x + 30, overlay.y + 140);
+        context.fillText("Use space or the mouse to spray pesticide", overlay.x + 30, overlay.y + 170);
+        context.fillText("Use enter to confirm a purchase", overlay.x + 30, overlay.y + 200);
+        context.fillText("Collect red fruit and exchange it for items", overlay.x + 30, overlay.y + 230);
+        context.fillText("Watch out for the swarms, some are even poisonous", overlay.x + 20, overlay.y + 260);
+        context.fillText("Your game is over when you die or all your trees die", overlay.x + 20, overlay.y + 290);
+        context.fillText("[ Press ENTER to begin! ]", textPos.x, overlay.y + 340);
     };
 
+    // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
     (function drawLoop() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -152,10 +150,6 @@ window.addEventListener('keyup', function(e) {
             level.draw(context);
         }
         reqFrame(drawLoop);
-    })
-    
-
-    
-    ();
+    }) ();
 
 })();
