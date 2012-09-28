@@ -62,15 +62,14 @@ Menubox.prototype.draw = function (context) {
     if (this.width == 0) { 
         this.width = Math.max.apply(Math, ([context.measureText(x).width for each (x in Object.keys(this.choices))])) + 150;
         this.textPos = {
-                x: this.pos.x + 25,
-                y: this.pos.y + this.fontSize + 20
+            x: this.pos.x + 25,
+            y: this.pos.y + this.fontSize + 20
         };
-        this.pointerPos = {x:this.pos.x + this.width - 50,
-                           y: this.pos.y + 20
+        this.pointerPos = {
+            x: this.pos.x + this.width - 50,
+            y: this.pos.y + 20
         };
     }
-
-
 
     // Draw text box
     context.drawImage(images.textbox, this.pos.x, this.pos.y, this.width, this.height);
@@ -112,7 +111,7 @@ Menubox.prototype.update = function (farmer) {
     }
     if (keyState[83]) {
         if (this.selected < Object.keys(this.choices).length - 1) {
-            if (this.timeBuffer == 2 ) {
+            if (this.timeBuffer == 2) {
                 this.selected += 1;
                 this.pointerPos.y += this.fontSize;
                 this.timeBuffer = 0;

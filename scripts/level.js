@@ -14,7 +14,7 @@ var Level = function (numTrees, region) {
     this.gasclouds = [];
     this.shopOpen  = false;
     this.onShop    = false;
-    this.farmer    = new Farmer({ x: 75, y: 75 });
+    this.farmer    = new Farmer({ x: 75, y: 75 }, this.trees);
     this.shop      = new Shop({ x: 0, y: 0 });
     this.gameOver  = false;
     this.shopDialog= new Menubox({"Potion":{"func":function(x) {x.health += 30;
@@ -53,6 +53,15 @@ var Level = function (numTrees, region) {
                                                                         x.speedup = false;
                                                                       }, 6000);}
                                             ,"cost":"10"}
+                                 ,"Heal Most Damaged Tree" :{"func":function(x) {
+                                    var tree = x.trees[0], i;
+                                    // Find most damaged tree
+                                    for (i = 0; i < x.trees.length; ++i) {
+                                        if (x.trees[i].health < tree.health) {
+                                            tree = x.trees[i];
+                                        }
+                                    }
+                                    tree.health = 100;}, "cost":"20"}
                                  ,"Exit"  :{"func":function(x){
                                                      return false;
                                                   }
@@ -153,7 +162,6 @@ Level.prototype.update = function (canvas) {
     this.canvas = canvas;
 
     if (this.gameOver) {
-        //this.pointer.update();
         return;
     }
     
@@ -273,11 +281,7 @@ Level.prototype.update = function (canvas) {
         } else {
             // Remove this cloud, it is too old
             this.gasclouds.splice(i, 1);
-            
-            // Add more spray
-            // TODO: only add spray at the store?  have to pay for it?
-
-        }
+         }
     }i
    
     // Regain spray very slowly
@@ -288,7 +292,6 @@ Level.prototype.update = function (canvas) {
     //GameOver
     if (this.farmer.health <= 0 || this.trees.length == 0) {
         this.gameOver = true;
-        //this.pointer = new Pointer(0, this.overText, images.pointer);
     }
 };
 
