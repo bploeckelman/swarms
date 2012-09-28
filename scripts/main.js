@@ -99,7 +99,7 @@ window.addEventListener('keyup', function(e) {
         context.font = "50px Verdana";
         var overlay = {
                 x: (canvas.width  / 2) - (canvas.width  / 2.5),
-                y: (canvas.height / 2) - (canvas.height / 4),
+                y: (canvas.height / 2) - (canvas.height / 3),
                 w: canvas.width  / 1.2,
                 h: canvas.height / 1.5
             },
