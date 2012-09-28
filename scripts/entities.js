@@ -399,19 +399,19 @@ Farmer.prototype.update = function (dir) {
     if (this.speed < this.minSpeed) {
         this.speed = this.minSpeed;
     }
-    if (keyState[68]) {
+    if (keyState[68] || keyState[39]) {
         this.facing = "right";
         this.pos.x += this.speed;
     }
-    if (keyState[65]) {
+    if (keyState[65] || keyState[37]) {
         this.facing = "left";
         this.pos.x -= this.speed;
     }
-    if (keyState[87]) {
+    if (keyState[87] || keyState[38]) {
         this.facing = "up";
         this.pos.y -= this.speed;
     }
-    if (keyState[83]) {
+    if (keyState[83] || keyState[40]) {
         this.facing = "down";
         this.pos.y += this.speed;
     }
