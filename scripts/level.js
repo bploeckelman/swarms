@@ -62,7 +62,7 @@ var Level = function (numTrees, region) {
                                                                         x.topSpeed /= 2;
                                                                         x.minSpeed /= 2;
                                                                         x.speedup = false;
-                                                                      }, 6000);}
+                                                                      }, 10000);}
                                             ,"cost":"10"}
                                  ,"Heal Most Damaged Tree" :{"func":function(x) {
                                     var tree = x.trees[0], i;

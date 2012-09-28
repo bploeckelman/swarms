@@ -98,6 +98,11 @@ Menubox.prototype.draw = function (context) {
 };
 
 Menubox.prototype.update = function (farmer) {
+    // Escape exits also
+    if (keyState[27]) {
+        return false;
+    }
+    
     if (keyState[87] || keyState[38]) {
         if (this.selected > 0) {
             if (this.timeBuffer == -3) {

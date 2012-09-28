@@ -94,7 +94,7 @@ window.addEventListener('keyup', function(e) {
 
     // ------------------------------------------------------------------
     function howTo() {
-        if (keyState[13]) { firstTime = false;}
+        if (keyState[13] || keyState[27]) { firstTime = false;}
         // How to play
         context.font = "50px Verdana";
         var overlay = {
@@ -126,10 +126,16 @@ window.addEventListener('keyup', function(e) {
         context.fillText("Use the arrow keys or WASD to move around", overlay.x + 30, overlay.y + 140);
         context.fillText("Use space or the mouse to spray pesticide", overlay.x + 30, overlay.y + 170);
         context.fillText("Use enter to confirm a purchase", overlay.x + 30, overlay.y + 200);
-        context.fillText("Collect red fruit and exchange it for items", overlay.x + 30, overlay.y + 230);
-        context.fillText("Watch out for the swarms, some are even poisonous", overlay.x + 20, overlay.y + 260);
-        context.fillText("Your game is over when you die or all your trees die", overlay.x + 20, overlay.y + 290);
-        context.fillText("[ Press ENTER to begin! ]", textPos.x, overlay.y + 340);
+        
+        context.fillStyle = "green";
+        context.fillText("*Collect red fruit, cash it in, powerup, protect trees*", overlay.x + 25, overlay.y + 240);
+        
+        context.fillStyle = "black";
+        context.fillText("Watch out for the swarms, some are even poisonous", overlay.x + 20, overlay.y + 280);
+        context.fillText("Your game is over when you die or all your trees die", overlay.x + 20, overlay.y + 310);
+        
+        context.fillStyle = "yellow";
+        context.fillText("[ Press ENTER or ESC to begin! ]", textPos.x - 30, overlay.y + 360);
     };
 
     // ------------------------------------------------------------------
