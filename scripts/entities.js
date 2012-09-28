@@ -369,6 +369,12 @@ var Farmer = function (pos) {
     this.minSpeed   = 1;
     this.numFruits  = 0;
     this.carryLimit = 20;
+    this.healthBar  = new Healthbar(
+        this, // parent
+        { w: images.farmer12.width / 3, h: 10 }, // size
+        { x:  0, y: -15 }, // offset from top-left of parent
+        { stroke: "#000", fill: "#d00" } // colors: border, interior
+    );
     this.facing     = "down";
     // TODO: sloppy
     this.width      = 48;
@@ -411,7 +417,6 @@ Farmer.prototype.update = function (dir) {
             return null;
         }
         return this.spray(this.facing);
-
     }
 };
 
@@ -425,7 +430,9 @@ Farmer.prototype.draw = function (context) {
                       this.pos.y,
                       farmerImages[this.facing + "0"].w,
                       farmerImages[this.facing + "0"].h);
-    
+
+    this.healthBar.draw(context);
+
     if (this.debug) {
         var center = this.center(),
             radius = this.radius(),
