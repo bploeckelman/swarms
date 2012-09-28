@@ -51,9 +51,7 @@ var Level = function (numTrees, region) {
                                             ,"cost":"8"}
                                  ,"Spray Increase" :{"func":function(x) {x.maxSpray += 25;}
                                             ,"cost":"8"}
-                                 ,"Antidote" :{"func":function(x) {x.isPoisoned = false;
-                                                                   x.healthBar.colors.fill = "#d00"; 
-                                                                  }
+                                 ,"Antidote" :{"func":function(x) {x.isPoisoned = false;}
                                             ,"cost":"6"}
                                  ,"Speed Boost" :{"func":function(x) {x.topSpeed *= 2;
                                                                       x.minSpeed *= 2;
