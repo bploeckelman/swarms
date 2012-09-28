@@ -75,7 +75,7 @@ Level.prototype.draw = function (context) {
     */
     // HACK HACK HACK - keep amounts up to date
     this.iconbox.amounts[0] = this.farmer.numFruits;
-    this.iconbox.amounts[1] = 0; // TODO: handle  money
+    this.iconbox.amounts[1] = this.farmer.cash;
     this.iconbox.amounts[2] = this.farmer.sprayAmt;
 
     this.iconbox.draw(context);
@@ -90,8 +90,8 @@ Level.prototype.draw = function (context) {
         // TODO: move all this sort of thing into updated textbox object
         context.font = "50px Verdana";
         var overlay = {
-                x: 50,
-                y: 25,
+                x: (this.canvas.width  / 2) - (this.canvas.width  / 3.5),
+                y: (this.canvas.height / 2) - (this.canvas.height / 6),
                 w: this.canvas.width  / 1.75,
                 h: this.canvas.height / 3
             },
@@ -192,12 +192,12 @@ Level.prototype.update = function (canvas) {
         if (!this.onShop) {
             this.shopOpen = true;
             this.onShop = true;
-            // TODO: track cash for dropoffs?
-            /*if (this.farmer.numFruits > 0) {
-                console.log("cashing in " + this.farmer.numFruits + " fruits");
+
+            if (this.farmer.numFruits > 0) {
                 this.shop.stockpile += this.farmer.numFruits;
+                this.farmer.cash += this.farmer.numFruits;
                 this.farmer.numFruits = 0;
-            }*/
+            }
         }
     } else {
         this.onShop = false;

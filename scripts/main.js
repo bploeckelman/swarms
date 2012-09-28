@@ -3,13 +3,15 @@
 /*global Level*/
 /*global console*/
 
-var keyState = {};
+var keyState = {}, mouseState = {}, mousePos = { x: 0, y: 0};
+
 window.addEventListener('keydown', function(e) {
     keyState[e.keycode || e.which] = true;
 }, true);
 window.addEventListener('keyup', function(e) {
     keyState[e.keycode || e.which] = false;
 }, true);
+
 
 // ----------------------------------------------------------------------
 //  Entry Point
@@ -72,17 +74,22 @@ window.addEventListener('keyup', function(e) {
     }
 
     // ------------------------------------------------------------------
-    canvas.addEventListener("click", function (event) {
-        /*
-        var gascloud = level.farmer.handleClick({
-            x: event.pageX - canvas.offsetLeft,
-            y: event.pageY - canvas.offsetTop
-        });
-        if (gascloud !== null) {
-            level.gasclouds.push(gascloud);
-        }
-        */
-    }, false);
+    window.addEventListener('mousedown', function (e) {
+        mouseState[e.button || e.which] = true;
+        mousePos = {
+            x: e.pageX - canvas.offsetLeft,
+            y: e.pageY - canvas.offsetTop
+        };
+    }, true);
+    window.addEventListener('mousemove', function (e) {
+        mousePos = {
+            x: e.pageX - canvas.offsetLeft,
+            y: e.pageY - canvas.offsetTop
+        };
+    }, true);
+    window.addEventListener('mouseup', function (e) {
+        mouseState[e.button || e.which] = false;
+    }, true);
 
     // ------------------------------------------------------------------
     // ------------------------------------------------------------------
