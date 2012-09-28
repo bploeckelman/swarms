@@ -95,8 +95,8 @@ Level.prototype.draw = function (context) {
         // TODO: move all this sort of thing into updated textbox object
         context.font = "50px Verdana";
         var overlay = {
-                x: 50,
-                y: 25,
+                x: (this.canvas.width  / 2) - (this.canvas.width  / 3.5),
+                y: (this.canvas.height / 2) - (this.canvas.height / 6),
                 w: this.canvas.width  / 1.75,
                 h: this.canvas.height / 3
             },
