@@ -283,10 +283,14 @@ GasCloud.prototype.update = function () {
     //       not elapsed num frames
     if (++this.age < this.maxAge) {
         // Update position
-        if (this.dir == "right") { this.pos.x += this.speed; }
-        if (this.dir == "left")  { this.pos.x -= this.speed; }
-        if (this.dir == "up")    { this.pos.y -= this.speed; }
-        if (this.dir == "down")  { this.pos.y += this.speed; }
+             if (this.dir == "right") { this.pos.x += this.speed; }
+        else if (this.dir == "left")  { this.pos.x -= this.speed; }
+        else if (this.dir == "up")    { this.pos.y -= this.speed; }
+        else if (this.dir == "down")  { this.pos.y += this.speed; }
+        else {
+            this.pos.x += this.dir.x * this.speed;
+            this.pos.y += this.dir.y * this.speed;
+        }
         
         // Update size
         this.width  += this.expand;
@@ -363,7 +367,7 @@ var Farmer = function (pos) {
     Entity.call(this, "farmer", pos, images.farmer12);
     this.health     = 100;
     this.sprayAmt   = 100;
-    this.sprayCost  = 1;
+    this.sprayCost  = 2;
     this.topSpeed   = 4;
     this.speed      = 4;
     this.minSpeed   = 1;
@@ -416,6 +420,20 @@ Farmer.prototype.update = function (dir) {
         }
         return this.spray(this.facing);
     }
+    if (mouseState[1]) {
+        var gascloud = this.handleClick(mousePos);
+        if (gascloud !== null) {
+            return gascloud;
+        }
+    }
+    // Regenerate spray over time
+    // NOTE: this is unused because its overpowered
+    // on the other hand, its sorta badass... we should find a happy medium
+    /*
+    if (++this.sprayAmt > 100) {
+        this.sprayAmt = 100;
+    }
+    */
 };
 
 Farmer.prototype.draw = function (context) {
@@ -455,10 +473,13 @@ Farmer.prototype.draw = function (context) {
 
 Farmer.prototype.spray = function (dir) {
     this.sprayAmt -= this.sprayCost;
+    if (this.sprayAmt < 0) {
+        this.sprayAmt = 0;
+    }
     return new GasCloud(this.center(), dir);
 };
 
-/*Farmer.prototype.handleClick = function (clickPos) {
+Farmer.prototype.handleClick = function (clickPos) {
     if (this.sprayAmt <= 0) {
         return null;
     }
@@ -473,7 +494,7 @@ Farmer.prototype.spray = function (dir) {
     dir.y /= dist;
     
     return this.spray(dir);
-};*/
+};
 
 Farmer.prototype.toString = function () {
     return Entity.prototype.toString.call(this);
