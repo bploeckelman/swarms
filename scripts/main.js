@@ -82,8 +82,6 @@ window.addEventListener('keyup', function(e) {
             level.gasclouds.push(gascloud);
         }
         */
-        // TESTING: This kills the farmer
-        level.farmer.health = 0;
     }, false);
 
     // ------------------------------------------------------------------

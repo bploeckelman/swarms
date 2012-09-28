@@ -385,8 +385,6 @@ Farmer.prototype.damage = function (amount) {
     this.health -= amount;
     if (this.health < 0.0) {
         this.health = 0.0;
-        // TODO: handle end of game properly
-        console.log("Game Over - You were killed by the swarm!");
     }
 };
 
