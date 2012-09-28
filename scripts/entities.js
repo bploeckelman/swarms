@@ -350,16 +350,16 @@ GasCloud.prototype.toString = function () {
 var farmerImages = {
      "up0"     :{ x:   0, y:   0, w:   48, h:  64}
     ,"up1"     :{ x:  48, y:   0, w:   48, h:  64}
-    ,"up2"     :{ x:  72, y:   0, w:   48, h:  64}
+    ,"up2"     :{ x:  96, y:   0, w:   48, h:  64}
     ,"right0"  :{ x:   0, y:  64, w:   48, h:  64}
     ,"right1"  :{ x:  48, y:  64, w:   48, h:  64}
-    ,"right2"  :{ x:  72, y:  64, w:   48, h:  64}
+    ,"right2"  :{ x:  96, y:  64, w:   48, h:  64}
     ,"down0"   :{ x:   0, y: 128, w:   48, h:  64}
     ,"down1"   :{ x:  48, y: 128, w:   48, h:  64}
-    ,"down2"   :{ x:  72, y: 128, w:   48, h:  64}
+    ,"down2"   :{ x:  96, y: 128, w:   48, h:  64}
     ,"left0"   :{ x:   0, y: 192, w:   48, h:  64}
     ,"left1"   :{ x:  48, y: 192, w:   48, h:  64}
-    ,"left2"   :{ x:  72, y: 192, w:   48, h:  64}
+    ,"left2"   :{ x:  96, y: 192, w:   48, h:  64}
 };
 var farmerTypes = Object.keys(farmerImages);
 
@@ -385,6 +385,7 @@ var Farmer = function (pos) {
         { stroke: "#000", fill: "#d00" } // colors: border, interior
     );
     this.facing     = "down";
+    this.prevFacing = 0;
     // TODO: sloppy
     this.width      = 48;
     this.height     = 64;
@@ -405,18 +406,22 @@ Farmer.prototype.update = function (dir) {
     }
     if (keyState[68] || keyState[39]) {
         this.facing = "right";
+        this.prevFacing += .1;
         this.pos.x += this.speed;
     }
     if (keyState[65] || keyState[37]) {
         this.facing = "left";
+        this.prevFacing += .1;
         this.pos.x -= this.speed;
     }
     if (keyState[87] || keyState[38]) {
         this.facing = "up";
+        this.prevFacing += .1;
         this.pos.y -= this.speed;
     }
     if (keyState[83] || keyState[40]) {
         this.facing = "down";
+        this.prevFacing += .1;
         this.pos.y += this.speed;
     }
     if (keyState[32]) {
@@ -443,14 +448,14 @@ Farmer.prototype.update = function (dir) {
 
 Farmer.prototype.draw = function (context) {
     context.drawImage(this.image, 
-                      farmerImages[this.facing + "0"].x,
-                      farmerImages[this.facing + "0"].y,
-                      farmerImages[this.facing + "0"].w,
-                      farmerImages[this.facing + "0"].h,
+                      farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].x,
+                      farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].y,
+                      farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].w,
+                      farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].h,
                       this.pos.x,
                       this.pos.y,
-                      farmerImages[this.facing + "0"].w,
-                      farmerImages[this.facing + "0"].h);
+                      farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].w,
+                      farmerImages[this.facing + String(Math.floor(this.prevFacing % 3))].h);
 
     this.healthBar.draw(context);
 
