@@ -9,6 +9,7 @@
 
 var Level = function (numTrees, region) {
     this.trees     = growTrees(numTrees, region);
+    this.firstTime = true;
     this.flocks    = [];
     this.gasclouds = [];
     this.shopOpen  = false;
@@ -39,7 +40,9 @@ var Level = function (numTrees, region) {
                                             ,"cost":"8"}
                                  ,"Spray Increase" :{"func":function(x) {x.maxSpray += 25;}
                                             ,"cost":"8"}
-                                 ,"Antidote" :{"func":function(x) {x.isPoisoned = false;}
+                                 ,"Antidote" :{"func":function(x) {x.isPoisoned = false;
+                                                                   x.healthBar.colors.fill = "#d00"; 
+                                                                  }
                                             ,"cost":"6"}
                                  ,"Speed Boost" :{"func":function(x) {x.topSpeed *= 2;
                                                                       x.minSpeed *= 2;}
@@ -57,8 +60,10 @@ var Level = function (numTrees, region) {
     );
 };
 
+
 // ----- Level prototype methods ----------------------------------------------
 Level.prototype.draw = function (context) {
+    
     var fruits = [], i;
 
     // Draw all trees
@@ -141,8 +146,10 @@ Level.prototype.draw = function (context) {
         context.font = "23px Verdana";
         context.fillStyle = "black";
         context.fillText("You were defeated by the swarm...", overlay.x + 30, overlay.y + 140);
+        context.fillText("You stockpiled " + String(this.shop.stockpile) + " fruits.", overlay.x + 30, overlay.y + 170);
     }
 };
+
 
 Level.prototype.update = function (canvas) {
     var i, j, parentTree, parentTreeIsSwarmed, flock, cloud, tree;
@@ -221,7 +228,10 @@ Level.prototype.update = function (canvas) {
     if (cloud != null) { this.gasclouds.push(cloud); }
     
     // Is poisioned?
-    if (this.farmer.isPoisoned) { this.farmer.damage(.05);}
+    if (this.farmer.isPoisoned) { 
+        this.farmer.damage(.05);
+        this.farmer.healthBar.colors.fill = "#00ff00";
+    }
 
     // Check for player-shop collision
     if (this.farmer.overlaps(this.shop)) {

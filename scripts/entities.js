@@ -517,7 +517,7 @@ Farmer.prototype.toString = function () {
 // ----------------------------------------------------------------------------
 var Shop = function (pos) {
     Entity.call(this, "shop", pos, images.shop);
-    stockpile: 0;
+    this.stockpile = 0;
 };
 
 Shop.prototype.draw = function (context) {
