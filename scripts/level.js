@@ -60,7 +60,7 @@ var Level = function (numTrees, region) {
                                             tree = x.trees[i];
                                         }
                                     }
-                                    tree.health = 100;}, "cost":"20"}
+                                    tree.health = 100;}, "cost":"15"}
                                  ,"Exit"  :{"func":function(x){
                                                      return false;
                                                   }
