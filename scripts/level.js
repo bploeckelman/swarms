@@ -77,14 +77,43 @@ Level.prototype.draw = function (context) {
     }
 
     if (this.gameOver) {
-        this.overText.draw(context);
-        this.pointer.draw(context);
-    }
+        // TODO: move all this sort of thing into updated textbox object
+        context.font = "50px Verdana";
+        var overlay = {
+                x: 50,
+                y: 25,
+                w: this.canvas.width  / 1.75,
+                h: this.canvas.height / 3
+            },
+            text = "Game Over!",
+            textSize = context.measureText(text),
+            textPos = {
+                x: overlay.x + (overlay.w / 2) - (textSize.width / 2),
+                y: overlay.y + 80
+            },
+            gradient = context.createLinearGradient(0, 0, this.canvas.width, 0);
 
+        // Draw text box
+        context.drawImage(images.textbox, overlay.x, overlay.y, overlay.w, overlay.h);
+
+        // Draw "game over" text
+        gradient.addColorStop("0.1", "black");
+        gradient.addColorStop("1.0", "red");
+        context.fillStyle = gradient;
+        context.fillText(text, textPos.x, textPos.y);
+
+        // Draw other text
+        context.font = "23px Verdana";
+        context.fillStyle = "black";
+        context.fillText("You were defeated by the swarm...", overlay.x + 30, overlay.y + 140);
+    }
 };
 
 Level.prototype.update = function (canvas) {
     var i, j, parentTree, parentTreeIsSwarmed, flock, cloud, tree;
+
+    // Hacky, but used by game over overlay in draw()
+    this.canvas = canvas;
 
     if (this.gameOver) {
         this.pointer.update();
